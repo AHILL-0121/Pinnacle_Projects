@@ -1,0 +1,19 @@
+# AI Web Research Agent - Dependencies
+# Core
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# LLM Providers
+google-generativeai>=0.4.0   # Gemini
+groq>=0.4.0                   # Groq
+ollama>=0.1.0                 # Ollama (local)
+
+# Web Search
+tavily-python>=0.3.0
+
+# CLI & Output
+rich>=13.7.0                  # Beautiful CLI output
+markdown>=3.5.0
+
+# Optional - for Jupyter support
+ipykernel>=6.29.0
