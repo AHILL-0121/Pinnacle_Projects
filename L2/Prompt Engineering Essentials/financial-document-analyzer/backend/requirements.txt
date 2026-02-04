@@ -1,0 +1,34 @@
+# Financial Document Analyzer - Backend Dependencies
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+httpx==0.26.0
+
+# Pydantic
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Image Processing
+Pillow==10.2.0
+numpy==1.26.3
+
+# PDF Processing
+PyMuPDF==1.23.8
+
+# OCR
+pytesseract==0.3.10
+# paddleocr==2.7.0  # Optional: uncomment for PaddleOCR support
+# paddlepaddle==2.6.0  # Required for PaddleOCR
+
+# AI/ML
+openai==1.12.0
+# transformers==4.37.2  # Optional: for table-transformer
+# torch==2.1.2  # Optional: for ML models
+
+# Data Processing
+pandas==2.2.0
+
+# Utilities
+python-dotenv==1.0.0

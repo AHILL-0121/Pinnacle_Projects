@@ -1,0 +1,56 @@
+# Combined Requirements for Financial Document Analyzer
+# Install with: pip install -r requirements.txt
+
+# ============== Web Framework ==============
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+httpx==0.26.0
+streamlit==1.31.0
+requests==2.31.0
+
+# ============== Pydantic ==============
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# ============== Image Processing ==============
+Pillow==10.2.0
+numpy==1.26.3
+
+# ============== PDF Processing ==============
+PyMuPDF==1.23.8
+
+# ============== OCR ==============
+pytesseract==0.3.10
+# Tesseract must be installed separately on the system:
+# Windows: Download from https://github.com/UB-Mannheim/tesseract/wiki
+# Mac: brew install tesseract
+# Linux: sudo apt-get install tesseract-ocr
+
+# Optional: PaddleOCR (better for complex layouts)
+# paddleocr==2.7.0
+# paddlepaddle==2.6.0
+
+# ============== AI/ML - LLM Providers ==============
+# OpenAI (default)
+openai==1.12.0
+
+# Google Gemini (optional - uncomment to use)
+google-generativeai==0.4.0
+
+# Groq (optional - uncomment to use, fast inference)
+groq==0.4.2
+
+# Ollama runs locally - no pip package needed
+# Install Ollama: https://ollama.ai
+# Pull model: ollama pull llama3.2
+
+# Optional: Enhanced table detection
+# transformers==4.37.2
+# torch==2.1.2
+
+# ============== Data Processing ==============
+pandas==2.2.0
+
+# ============== Utilities ==============
+python-dotenv==1.0.0
