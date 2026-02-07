@@ -24,6 +24,7 @@
 - [Project 2 — Financial Document Analyzer](#-project-2--financial-document-analyzer)
 - [Project 3 — RAG Systems Essentials](#-project-3--rag-systems-essentials)
 - [Project 4 — AI Web Research Agent](#-project-4--ai-web-research-agent)
+- [Project 5 — Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -42,6 +43,7 @@ This monorepo contains **four full-stack, independently deployable projects** or
 | **L2** | [Financial Document Analyzer](#-project-2--financial-document-analyzer) | Document AI & OCR | FastAPI, Tesseract, Streamlit, Multi-LLM |
 | **L2** | [RAG Systems Essentials](#-project-3--rag-systems-essentials) | Research Paper Q&A | FAISS, Sentence Transformers, Multi-LLM |
 | **L3** | [AI Web Research Agent](#-project-4--ai-web-research-agent) | Autonomous Research | ReAct Pattern, Tavily, Multi-LLM |
+| **L3** | [Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant) | Travel AI Agent | LangChain Agent, WeatherAPI, DuckDuckGo |
 
 ### What Makes These Production-Grade
 
@@ -117,11 +119,20 @@ Pinnacle_Projects/
 │           ├── papers/                   #   Place PDF research papers here
 │           └── index/                    #   Persisted FAISS index + chunk metadata
 │
-└── L3/                                   # Advanced-level project
-    └── Building AI Agents from Scratch/  # PROJECT 4: Autonomous research agent
-        ├── agent.py                      #   Complete single-file agent (841 lines)
+└── L3/                                   # Advanced-level projects
+    ├── Building AI Agents from Scratch/  # PROJECT 4: Autonomous research agent
+    │   ├── agent.py                      #   Complete single-file agent (841 lines)
+    │   ├── requirements.txt
+    │   └── reports/                      #   Auto-generated research reports (MD + HTML)
+    │
+    └── Building AI Agents with LangChain/# PROJECT 5: LangChain Travel Assistant
+        ├── main.py                       #   CLI entry point (interactive loop)
+        ├── agent.py                      #   Agent factory (multi-LLM + tool binding)
+        ├── config.py                     #   Central configuration (loads .env)
         ├── requirements.txt
-        └── reports/                      #   Auto-generated research reports (MD + HTML)
+        └── tools/                        #   Modular tool registry
+            ├── weather.py                #     @tool – WeatherAPI.com
+            └── attractions.py            #     @tool – DuckDuckGo search
 ```
 
 ---
@@ -600,11 +611,99 @@ python agent.py "Quantum Computing" --provider groq
 
 ---
 
+## 🌍 Project 5 — Intelligent Travel Assistant
+
+### Purpose
+
+An **AI-powered travel assistant** built with **LangChain's tool-calling agent architecture** that accepts a destination city and autonomously fetches real-time weather data and top tourist attractions, then synthesises them into a unified travel briefing.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Framework** | LangChain ≥ 1.2 (`create_tool_calling_agent` + `AgentExecutor`) |
+| **LLM Providers** | OpenAI GPT-4o-mini, Google Gemini, Ollama (llama3.1) — switchable via env var |
+| **Weather API** | WeatherAPI.com (free tier) |
+| **Search Engine** | DuckDuckGo via `ddgs` package (free, no key) |
+| **Architecture** | Modular tool-based agent — add tools without touching agent logic |
+| **Python Version** | 3.10+ |
+
+### How the LLM Reasoning Works
+
+The LLM acts as an **autonomous planner**, not hard-coded logic:
+
+```
+User: "Paris"
+     │
+     ▼
+LLM reads system prompt + wrapped query
+     │  "I'm planning a trip to Paris..."
+     ▼
+LLM reasons: need weather AND attractions
+     │
+     ▼
+LLM generates tool calls:
+  ├── get_weather("Paris")    → WeatherAPI.com → temperature, humidity, wind
+  └── get_attractions("Paris") → DuckDuckGo    → top 5 tourist spots
+     │
+     ▼
+AgentExecutor runs both tools, adds results to scratchpad
+     │
+     ▼
+LLM sees all tool outputs, synthesises single travel briefing
+     │
+     ▼
+Final formatted response displayed to user
+```
+
+The LLM **dynamically decides** which tools to call based on the query. Asking "What's the weather in Tokyo?" calls only the weather tool. Asking "What should I see in Rome?" calls only the attractions tool. This is **tool-based reasoning** — the intelligence comes from the LLM, not from `if/else` branches.
+
+### Program Flow
+
+```
+1.  python main.py
+2.  config.py loads .env (API keys, LLM_PROVIDER)
+3.  agent.py builds: LLM → create_tool_calling_agent → AgentExecutor
+4.  User types city name → wrapped into natural language prompt
+5.  AgentExecutor runs reasoning chain:
+      a. LLM selects tools  b. Tools execute  c. LLM merges results
+6.  Response printed → loop continues until "quit"
+```
+
+### Project Structure
+
+```
+L3/Building AI Agents with LangChain/
+├── .env.example        # API key template
+├── config.py           # Central config (loads .env)
+├── agent.py            # Agent factory (multi-LLM + tool binding)
+├── main.py             # CLI entry point
+├── requirements.txt    # Dependencies
+├── README.md           # Full report with reasoning explanation
+└── tools/
+    ├── __init__.py     # Exports ALL_TOOLS
+    ├── weather.py      # @tool — WeatherAPI.com
+    └── attractions.py  # @tool — DuckDuckGo search
+```
+
+### Quick Start
+
+```powershell
+cd "L3/Building AI Agents with LangChain"
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env    # Edit .env: set LLM_PROVIDER + API keys
+python main.py
+```
+
+---
+
 ## 🔗 Shared Technical Concepts
 
 ### Multi-LLM Provider Pattern
 
-All three AI projects (Projects 2, 3, 4) implement the same provider abstraction:
+All four AI projects (Projects 2, 3, 4, 5) implement the same provider abstraction:
 
 ```
 ┌──────────────────────────────────────┐
