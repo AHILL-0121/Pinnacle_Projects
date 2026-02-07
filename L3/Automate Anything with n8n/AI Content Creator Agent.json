@@ -1,0 +1,652 @@
+{
+  "name": "AI Content Creator Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "7aa1583a-2935-477d-a448-9da3bc0b78e5",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1344,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM",
+          "mode": "list",
+          "cachedResultName": "Content Topics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "c72d15f9-977f-4bc2-a15d-9bbb2eb13e84",
+      "name": "Read Pending Topics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1136,
+        144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YALeyvBLlwobDZTK",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "0cffe0a1-bb9b-4a09-98f2-4544e91cb259",
+      "name": "Loop Over Topics",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -512,
+        144
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "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"
+            },
+            {
+              "name": "query",
+              "value": "={{ $json.Topic }}"
+            },
+            {
+              "name": "search_depth",
+              "value": "advanced"
+            },
+            {
+              "name": "max_results",
+              "value": "5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "220f440c-0e2e-46dc-8833-a6f37ea59359",
+      "name": "Tavily Research",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -288,
+        144
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "wWEnLi7onqKwhVUi",
+          "name": "Authorization"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "results",
+        "options": {}
+      },
+      "id": "0abf8172-ad69-421b-baf1-b0da9b22c20f",
+      "name": "Split Research Results",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "21c7fd3e-285e-4ff9-add7-c4c388d7ed7a",
+      "name": "Aggregate Research",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        160,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1b2c3d4-1111-2222-3333-444455556666",
+              "name": "Topic",
+              "value": "={{ $('Loop Over Topics').first().json.Topic }}",
+              "type": "string"
+            },
+            {
+              "id": "b2c3d4e5-2222-3333-4444-555566667777",
+              "name": "researchSummary",
+              "value": "=={{ $json.data.map(item => item.content).join(' ').replace(/\\n/g, \"\\\\n\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4df76f14-3a4f-4188-b429-2903668e7fa3",
+      "name": "Prepare Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.1\",\n  \"prompt\": \"You are a professional LinkedIn content writer.\\n\\nWrite a thought-leadership post on: {{ $json.Topic }}\\n\\nContext:\\n{{ $json.researchSummary }}\\n\\nTone: Professional, insightful\\nLength: 120-200 words\\nDo not use hashtags.\",\n  \"stream\": false\n}",
+        "options": {}
+      },
+      "id": "d1b86c09-52b9-499e-97f0-708e90cbab87",
+      "name": "Generate LinkedIn Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.1\",\n  \"prompt\": \"You are a social media copywriter.\\n\\nWrite a concise, engaging tweet on: {{ $json.Topic }}\\n\\nContext (use for accuracy):\\n{{ $json.researchSummary }}\\n\\nMax 280 characters.\\nUse hooks and clarity.\\nNo hashtags.\",\n  \"stream\": false\n}",
+        "options": {}
+      },
+      "id": "4409d7ae-f13c-44d8-925e-49f3f9d61810",
+      "name": "Generate X Post",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        592,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama3.1\",\n  \"prompt\": \"You are a blog writer.\\n\\nWrite a 150-200 word blog summary on: {{ $json.Topic }}\\n\\nUse the following research:\\n{{ $json.researchSummary }}\\n\\nTone: Informative, neutral, explanatory\",\n  \"stream\": false\n}",
+        "options": {}
+      },
+      "id": "a9daeb6b-55d3-439a-baca-47754f3204c2",
+      "name": "Generate Blog Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        608,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d1e2f3a4-5555-6666-7777-888899990000",
+              "name": "Topic",
+              "value": "={{ $('Prepare Data').item.json.Topic }}",
+              "type": "string"
+            },
+            {
+              "id": "e2f3a4b5-6666-7777-8888-999900001111",
+              "name": "LinkedIn_Post",
+              "value": "={{ $('Generate LinkedIn Post').item.json.response }}",
+              "type": "string"
+            },
+            {
+              "id": "f3a4b5c6-7777-8888-9999-000011112222",
+              "name": "X_Post",
+              "value": "={{ $('Generate X Post').item.json.response }}",
+              "type": "string"
+            },
+            {
+              "id": "a4b5c6d7-8888-9999-0000-111122223333",
+              "name": "Blog_Summary",
+              "value": "={{ $('Generate Blog Summary').item.json.response }}",
+              "type": "string"
+            },
+            {
+              "id": "b5c6d7e8-9999-0000-1111-222233334444",
+              "name": "Status",
+              "value": "Completed",
+              "type": "string"
+            },
+            {
+              "id": "c6d7e8f9-0000-1111-2222-333344445555",
+              "name": "Published_Date",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fad53a09-5885-4589-97f9-7f1d75c952cf",
+      "name": "Format Update Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM",
+          "mode": "list",
+          "cachedResultName": "Content Topics",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10zIY3uF_Jsspw-21648-751fEyusBEfzdTer60xyPwM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.Status }}",
+            "LinkedIn_Post": "={{ $json.LinkedIn_Post }}",
+            "X_Post": "={{ $json.X_Post }}",
+            "Blog_Summary": "={{ $json.Blog_Summary }}",
+            "Published_Date": "={{ $json.Published_Date }}",
+            "Topic": "={{ $json.Topic }}"
+          },
+          "matchingColumns": [
+            "Topic"
+          ],
+          "schema": [
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Post",
+              "displayName": "LinkedIn_Post",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "X_Post",
+              "displayName": "X_Post",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Blog_Summary",
+              "displayName": "Blog_Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Published_Date",
+              "displayName": "Published_Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d79e198c-3187-4593-875e-609a064a76da",
+      "name": "Update Sheet with Content",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1376,
+        352
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YALeyvBLlwobDZTK",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        128
+      ],
+      "id": "06cbb894-ef3a-437e-95ea-f87876a0e1b3",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.Status}}",
+              "rightValue": "Pending",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "id": "98844577-8eab-488a-ab8d-0841252ff045"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "63f38193-d67a-4d96-bb07-201bc558fb80",
+      "name": "Filter Pending Topics",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# AI Content Creator Agent - Workflow Documentation\n\n## 📅 Schedule Trigger\n**Purpose:** Runs the workflow every 6 hours automatically\n- Interval: Every 6 hours\n- Ensures regular content generation without manual intervention\n\n---\n\n## 📊 Read Pending Topics\n**Purpose:** Fetches all rows from Google Sheets\n- Reads from: Content Topics spreadsheet\n- Sheet: Sheet1\n- Gets ALL rows (filtering happens in next step)\n\n---\n\n## 🔍 Filter Pending Topics\n**Purpose:** Keeps only rows where Status = \"Pending\"\n- Condition: Status equals \"Pending\"\n- Discards completed topics\n- Only pending topics move forward\n\n---\n\n## 🔄 Loop Over Topics\n**Purpose:** Process one topic at a time\n- Batch size: 1 topic per iteration\n- Ensures each topic gets individual attention\n- Loops back after updating sheet\n\n---\n\n## 🔎 Tavily Research\n**Purpose:** Search the web for current information\n- API: Tavily Search\n- Max results: 5 sources per topic\n- Search depth: Advanced\n- Returns: Relevant articles and content\n\n---\n\n## 📑 Split Research Results\n**Purpose:** Separates the 5 research results into individual items\n- Splits \"results\" array\n- Each source becomes separate item\n- Prepares for aggregation\n\n---\n\n## 📦 Aggregate Research\n**Purpose:** Combines all research sources back into one item\n- Aggregates: All research content\n- Output: Single item with all data\n- Ready for content generation\n\n---\n\n## 🎯 Prepare Data\n**Purpose:** Formats data for AI models\n- Extracts: Topic name\n- Creates: researchSummary (cleaned text)\n- Removes: Extra newlines and formatting\n- Output: Clean topic + research summary\n\n---\n\n## 💼 Generate LinkedIn Post\n**Purpose:** Creates professional LinkedIn content\n- Model: Llama 3.1 (local Ollama)\n- Tone: Professional, insightful\n- Length: 120-200 words\n- No hashtags\n\n---\n\n## 🐦 Generate X Post\n**Purpose:** Creates engaging Twitter/X content\n- Model: Llama 3.1 (local Ollama)\n- Length: Max 280 characters\n- Style: Concise, engaging hooks\n- No hashtags\n\n---\n\n## 📝 Generate Blog Summary\n**Purpose:** Creates informative blog content\n- Model: Llama 3.1 (local Ollama)\n- Length: 150-200 words\n- Tone: Informative, neutral\n- Format: Summary paragraph\n\n---\n\n## 🔗 Merge\n**Purpose:** Combines all 3 AI-generated outputs\n- Merges: LinkedIn + X + Blog posts\n- Method: By position\n- Creates single item with all content\n\n---\n\n## 📋 Format Update Data\n**Purpose:** Prepares data for Google Sheets update\n- Sets: Status = \"Completed\"\n- Includes: LinkedIn_Post, X_Post, Blog_Summary\n- Adds: Published_Date (timestamp)\n- Maps: Topic for matching\n\n---\n\n## ✅ Update Sheet with Content\n**Purpose:** Writes generated content back to Google Sheets\n- Updates row by matching Topic\n- Sets: All content fields + Status\n- Marks: Published_Date\n- Triggers: Next loop iteration\n\n---\n\n## 🔁 Workflow Loop\nAfter updating the sheet, execution flows back to \"Loop Over Topics\" to process the next pending topic until all are complete.\n\n---\n\n## 📌 Key Features\n✅ Fully automated - runs every 6 hours\n✅ One topic at a time - ensures quality\n✅ Web research - uses latest information\n✅ Multi-platform - LinkedIn, X, Blog\n✅ Local AI - Ollama (privacy + cost-free)\n✅ Auto-tracking - updates status automatically\n",
+        "height": 3152,
+        "width": 944
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2640,
+        -1008
+      ],
+      "id": "633aedfd-919b-4f6b-9244-991b623905ca",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Pending Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Pending Topics": {
+      "main": [
+        [
+          {
+            "node": "Filter Pending Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Topics": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Tavily Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily Research": {
+      "main": [
+        [
+          {
+            "node": "Split Research Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Research Results": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Research": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Generate LinkedIn Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate X Post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Blog Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate LinkedIn Post": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate X Post": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Format Update Data": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet with Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet with Content": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Blog Summary": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Format Update Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Pending Topics": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2a26179e-727e-4831-abb2-3ca8bf7eed4f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f89bbdbf598a41c8b68d4ff423783079fab65423f2aaa7d1a7fe5a1fafbc76ee"
+  },
+  "id": "m9CtOz1gEfF4wTn5",
+  "tags": []
+}
