@@ -1,0 +1,134 @@
+[
+  {
+    "name": "FabIndia",
+    "address": "80 Feet Road, Koramangala 4th Block, Bangalore",
+    "rating": 4.3,
+    "review_count": 1820,
+    "distance_km": 0.3,
+    "phone": "+91 80 4125 0001",
+    "place_id": "demo_fabindia_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Westside",
+    "address": "Forum Mall, Koramangala, Bangalore",
+    "rating": 4.1,
+    "review_count": 2450,
+    "distance_km": 0.5,
+    "phone": "+91 80 4125 0002",
+    "place_id": "demo_westside_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Zara",
+    "address": "Forum Mall, Koramangala, Bangalore",
+    "rating": 4.4,
+    "review_count": 3100,
+    "distance_km": 0.5,
+    "phone": "+91 80 4125 0003",
+    "place_id": "demo_zara_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "H&M",
+    "address": "Forum Mall, Koramangala, Bangalore",
+    "rating": 4.2,
+    "review_count": 2780,
+    "distance_km": 0.6,
+    "phone": "+91 80 4125 0004",
+    "place_id": "demo_hm_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Pantaloons",
+    "address": "100 Feet Road, Koramangala, Bangalore",
+    "rating": 3.9,
+    "review_count": 1540,
+    "distance_km": 0.8,
+    "phone": "+91 80 4125 0005",
+    "place_id": "demo_pantaloons_01",
+    "business_type": "clothing_store",
+    "is_open_now": false
+  },
+  {
+    "name": "Max Fashion",
+    "address": "Near Sony Signal, Koramangala, Bangalore",
+    "rating": 4.0,
+    "review_count": 1950,
+    "distance_km": 0.9,
+    "phone": "+91 80 4125 0006",
+    "place_id": "demo_max_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Lifestyle",
+    "address": "Koramangala 5th Block, Bangalore",
+    "rating": 4.1,
+    "review_count": 2100,
+    "distance_km": 1.1,
+    "phone": "+91 80 4125 0007",
+    "place_id": "demo_lifestyle_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Allen Solly",
+    "address": "Koramangala 1st Block, Bangalore",
+    "rating": 4.0,
+    "review_count": 890,
+    "distance_km": 1.2,
+    "phone": "+91 80 4125 0008",
+    "place_id": "demo_allensolly_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Van Heusen",
+    "address": "Koramangala 6th Block, Bangalore",
+    "rating": 3.8,
+    "review_count": 670,
+    "distance_km": 1.4,
+    "phone": "+91 80 4125 0009",
+    "place_id": "demo_vanheusen_01",
+    "business_type": "clothing_store",
+    "is_open_now": false
+  },
+  {
+    "name": "Levi's Store",
+    "address": "80 Feet Road, Koramangala, Bangalore",
+    "rating": 4.3,
+    "review_count": 1420,
+    "distance_km": 1.5,
+    "phone": "+91 80 4125 0010",
+    "place_id": "demo_levis_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "Biba",
+    "address": "Koramangala 3rd Block, Bangalore",
+    "rating": 4.1,
+    "review_count": 980,
+    "distance_km": 1.7,
+    "phone": "+91 80 4125 0011",
+    "place_id": "demo_biba_01",
+    "business_type": "clothing_store",
+    "is_open_now": true
+  },
+  {
+    "name": "W for Woman",
+    "address": "Koramangala 7th Block, Bangalore",
+    "rating": 4.2,
+    "review_count": 760,
+    "distance_km": 1.9,
+    "phone": "+91 80 4125 0012",
+    "place_id": "demo_wforwoman_01",
+    "business_type": "clothing_store",
+    "is_open_now": false
+  }
+]
