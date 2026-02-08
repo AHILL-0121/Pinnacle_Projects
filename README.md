@@ -7,10 +7,12 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-0.2+-FF6F00?style=for-the-badge)](https://langchain-ai.github.io/langgraph/)
+[![n8n](https://img.shields.io/badge/n8n-Workflow-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)](https://n8n.io)
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Four interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, and autonomous AI agents — each built from scratch with enterprise-grade architecture.*
+*Seven interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, no-code workflow automation, and competitor intelligence — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -25,6 +27,8 @@
 - [Project 3 — RAG Systems Essentials](#-project-3--rag-systems-essentials)
 - [Project 4 — AI Web Research Agent](#-project-4--ai-web-research-agent)
 - [Project 5 — Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant)
+- [Project 6 — AI Content Creator Agent (n8n)](#-project-6--ai-content-creator-agent-n8n)
+- [Project 7 — Competitor Intelligence System (LangGraph)](#-project-7--competitor-intelligence-system-langgraph)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -35,7 +39,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **four full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **seven full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -44,6 +48,8 @@ This monorepo contains **four full-stack, independently deployable projects** or
 | **L2** | [RAG Systems Essentials](#-project-3--rag-systems-essentials) | Research Paper Q&A | FAISS, Sentence Transformers, Multi-LLM |
 | **L3** | [AI Web Research Agent](#-project-4--ai-web-research-agent) | Autonomous Research | ReAct Pattern, Tavily, Multi-LLM |
 | **L3** | [Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant) | Travel AI Agent | LangChain Agent, WeatherAPI, DuckDuckGo |
+| **L3** | [AI Content Creator Agent](#-project-6--ai-content-creator-agent-n8n) | No-Code Automation | n8n, Ollama, Tavily, Google Sheets |
+| **L3** | [Competitor Intelligence System](#-project-7--competitor-intelligence-system-langgraph) | Retail Intelligence | LangGraph, LangChain, OpenStreetMap, Streamlit |
 
 ### What Makes These Production-Grade
 
@@ -125,14 +131,44 @@ Pinnacle_Projects/
     │   ├── requirements.txt
     │   └── reports/                      #   Auto-generated research reports (MD + HTML)
     │
-    └── Building AI Agents with LangChain/# PROJECT 5: LangChain Travel Assistant
-        ├── main.py                       #   CLI entry point (interactive loop)
-        ├── agent.py                      #   Agent factory (multi-LLM + tool binding)
-        ├── config.py                     #   Central configuration (loads .env)
+    ├── Building AI Agents with LangChain/# PROJECT 5: LangChain Travel Assistant
+    │   ├── main.py                       #   CLI entry point (interactive loop)
+    │   ├── agent.py                      #   Agent factory (multi-LLM + tool binding)
+    │   ├── config.py                     #   Central configuration (loads .env)
+    │   ├── requirements.txt
+    │   └── tools/                        #   Modular tool registry
+    │       ├── weather.py                #     @tool – WeatherAPI.com
+    │       └── attractions.py            #     @tool – DuckDuckGo search
+    │
+    ├── Automate Anything with n8n/       # PROJECT 6: No-code content creator
+    │   ├── AI Content Creator Agent.json #   n8n workflow definition
+    │   └── readme.md                     #   Full documentation
+    │
+    └── Building your First AI Agent with LangGraph/  # PROJECT 7: Competitor intelligence
+        ├── main.py                       #   CLI entry point (interactive / demo)
+        ├── app.py                        #   Streamlit web chat UI
+        ├── config.py                     #   Environment configuration
         ├── requirements.txt
-        └── tools/                        #   Modular tool registry
-            ├── weather.py                #     @tool – WeatherAPI.com
-            └── attractions.py            #     @tool – DuckDuckGo search
+        ├── agent/
+        │   ├── graph.py                  #   LangGraph ReAct agent + post-processing
+        │   ├── state.py                  #   Agent state schema
+        │   └── prompts.py                #   System prompt (tool-use rules)
+        ├── tools/
+        │   ├── _store.py                 #   Shared in-memory data store
+        │   ├── location_search.py        #   Geocoding (Nominatim)
+        │   ├── competitor_fetch.py        #   Nearby competitor search (Overpass API)
+        │   ├── footfall_estimator.py      #   Busy-hour estimation
+        │   └── report_formatter.py        #   Markdown report generator
+        ├── services/
+        │   ├── llm_service.py            #   LLM provider factory (Ollama / OpenAI)
+        │   ├── places_service.py          #   Nominatim + Overpass API
+        │   └── cache.py                  #   Disk-based response caching
+        ├── models/
+        │   └── schemas.py                #   Pydantic v2 data models
+        └── data/
+            ├── demo/                     #   Sample competitor data
+            ├── cache/                    #   API response cache
+            └── reports/                  #   Generated reports
 ```
 
 ---
@@ -699,11 +735,235 @@ python main.py
 
 ---
 
+## 🤖 Project 6 — AI Content Creator Agent (n8n)
+
+### Purpose
+
+An **intelligent, no-code automation system** built on n8n that researches trending topics via Tavily, generates platform-specific content (LinkedIn, X/Twitter, Blog) using a local Ollama LLM, and publishes results to Google Sheets — all on a 6-hour automated schedule.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Platform** | n8n v1.0+ (workflow automation) |
+| **LLM** | Ollama — Llama 3.1 (8B+, local inference) |
+| **Web Search** | Tavily Search API (5 sources per topic) |
+| **Data Store** | Google Sheets (read topics + write results) |
+| **Scheduling** | Every 6 hours (cron trigger) |
+| **Deployment** | npm global or Docker container |
+| **Architecture** | JSON workflow definition (importable into any n8n instance) |
+
+### Workflow Architecture
+
+```
+┌─────────────────┐
+│ Schedule Trigger│  (Every 6 hours)
+└────────┬────────┘
+         ▼
+┌─────────────────┐
+│ Google Sheets   │  ← Read all rows
+│ (Read Topics)   │
+└────────┬────────┘
+         ▼
+┌─────────────────┐
+│ Filter Pending  │  ← Status = "Pending"
+└────────┬────────┘
+         ▼
+┌─────────────────┐
+│ Tavily Research │  ← Web search (5 sources/topic)
+└────────┬────────┘
+         │
+         ├────────────────┬────────────────┐
+         ▼                ▼                ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│ LinkedIn Gen │  │   X Gen      │  │  Blog Gen    │
+│ (Ollama)     │  │  (Ollama)    │  │  (Ollama)    │
+└──────┬───────┘  └──────┬───────┘  └──────┬───────┘
+       └────────┬────────┴────────┬────────┘
+                ▼
+         ┌─────────────┐
+         │ Update Sheet│  ← Write content + timestamp + "Completed"
+         └─────────────┘
+```
+
+### Content Specifications
+
+| Platform | Length | Tone |
+|----------|--------|------|
+| **LinkedIn** | 120–200 words | Professional, insightful |
+| **X (Twitter)** | Max 280 characters | Concise, engaging |
+| **Blog** | 150–200 words | Informative, neutral |
+
+### Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| No-code (n8n) | Accessible to non-developers; visual debugging |
+| Local LLM (Ollama) | Privacy-focused; no per-token costs |
+| Google Sheets as store | Free, collaborative, no database setup |
+| Status tracking | "Pending" → "Completed" prevents duplicate processing |
+| Parallel content generation | LinkedIn / X / Blog generated simultaneously for speed |
+
+### Quick Start
+
+```powershell
+# Install n8n
+npm install -g n8n
+
+# Install Ollama + model
+# Download from https://ollama.ai, then:
+ollama pull llama3.1
+
+# Start n8n
+n8n start
+# Open http://localhost:5678
+# Import "AI Content Creator Agent.json" workflow
+
+# Configure credentials in n8n UI:
+#   - Tavily API key
+#   - Google Sheets OAuth2
+#   - Ollama connection (localhost:11434)
+```
+
+### Prerequisites
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **n8n** | v1.0+ | Workflow automation platform |
+| **Ollama** | Latest | Local AI model runtime |
+| **Llama 3.1** | 8B+ | Language model for generation |
+| **Node.js** | 18+ | n8n runtime |
+| **RAM** | 8 GB min (16 GB recommended) | Llama 3.1 inference |
+
+---
+
+## 🏪 Project 7 — Competitor Intelligence System (LangGraph)
+
+### Purpose
+
+A **conversational AI decision-support assistant** for clothing retailers to discover nearby competitors, estimate footfall trends, and generate actionable market intelligence reports — all through natural language conversation. Built with **LangGraph** + **LangChain** + **Ollama/OpenAI**, using entirely free OpenStreetMap data.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **AI Framework** | LangGraph ≥ 0.2 + LangChain ≥ 0.3 |
+| **LLM Providers** | Ollama (LLaMA 3.1) / OpenAI (GPT-4o-mini) |
+| **Location Data** | OpenStreetMap — Nominatim (geocoding) + Overpass API (POI search) |
+| **Data Models** | Pydantic v2 |
+| **Caching** | diskcache (disk-based response caching) |
+| **CLI** | Rich (Markdown rendering, spinners, tables) |
+| **Web UI** | Streamlit (chat interface) |
+| **Paid APIs** | None required — fully free data sources |
+| **Python Version** | 3.10+ |
+
+### Agent Architecture
+
+```
+User Query
+  → LangGraph ReAct Agent (LLM with tool-calling)
+    → competitor_fetch_tool     → find nearby clothing stores (OSM)
+    → footfall_estimator_tool   → estimate busy hours & footfall levels
+    → report_formatter_tool     → generate full Markdown analysis report
+    → location_search_tool      → geocode location via Nominatim
+  → Formatted Response (Markdown tables, not raw JSON)
+```
+
+### Agent Graph
+
+```
+┌──────────┐     tool calls     ┌──────────┐
+│  agent   │ ──────────────►    │  tools   │
+│  (LLM)   │ ◄──────────────    │ (4 tools)│
+└──────────┘     results        └──────────┘
+     │
+     │ no more tool calls
+     ▼
+   [END] → formatted response
+```
+
+### Core Tools
+
+| Tool | File | Responsibility |
+|------|------|----------------|
+| **location_search** | `tools/location_search.py` | Geocodes user-specified areas via Nominatim |
+| **competitor_fetch** | `tools/competitor_fetch.py` | Queries Overpass API for nearby clothing/fashion stores within configurable radius |
+| **footfall_estimator** | `tools/footfall_estimator.py` | Generates distance-based popularity scores & busy-hour estimates |
+| **report_formatter** | `tools/report_formatter.py` | Compiles competitor + footfall data into a 5-section Markdown report |
+
+### Key Design Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| Tools return pre-formatted Markdown | LLM relays results directly — works reliably even with small local models |
+| Shared in-memory store (`_store.py`) | Tools pass data to each other without JSON serialization through the LLM |
+| Post-processing guard | If the LLM describes tool output instead of relaying it, the agent injects actual output automatically |
+| Free data sources only | No paid API keys required for location/competitor data |
+| Dual interface (CLI + Streamlit) | Serves both developers and non-technical users |
+
+### Multi-Turn Conversation
+
+```
+You > List clothing stores near Koramangala
+      → [table: 25 stores with distance, type, address]
+
+You > What are the peak hours?
+      → [footfall table: High/Medium/Low per store, busiest days]
+
+You > Generate a full competitor report
+      → [5-section Markdown report saved to data/reports/]
+
+You > Now check Indiranagar
+      → [new search, new table]
+
+You > Compare both areas
+      → [comparative analysis]
+```
+
+### Configuration Reference
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LLM_PROVIDER` | `ollama` | `ollama` or `openai` |
+| `OLLAMA_MODEL` | `llama3.1` | Ollama model name |
+| `OPENAI_MODEL` | `gpt-4o-mini` | OpenAI model name |
+| `DEFAULT_RADIUS_KM` | `2` | Search radius in km |
+| `DEMO_MODE` | `true` | Use synthetic demo data (no network) |
+| `CACHE_TTL_SECONDS` | `3600` | Cache expiry |
+
+### Quick Start
+
+```powershell
+cd "L3/Building your First AI Agent with LangGraph"
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env    # Edit .env: set LLM_PROVIDER
+
+# Start Ollama (if using local LLM)
+ollama pull llama3.1
+ollama serve
+
+# Interactive CLI
+python main.py
+
+# Single query
+python main.py --query "List clothing competitors near my area"
+
+# Demo mode (offline, no API calls)
+python main.py --demo
+
+# Web UI
+streamlit run app.py
+```
+
+---
+
 ## 🔗 Shared Technical Concepts
 
 ### Multi-LLM Provider Pattern
 
-All four AI projects (Projects 2, 3, 4, 5) implement the same provider abstraction:
+All five AI projects (Projects 2, 3, 4, 5, 6, 7) implement the same provider abstraction:
 
 ```
 ┌──────────────────────────────────────┐
@@ -734,9 +994,11 @@ All four AI projects (Projects 2, 3, 4, 5) implement the same provider abstracti
 | Blueprint/Router | Projects 1, 2 | Flask Blueprints / FastAPI routers |
 | Service Layer | All | Business logic separated from routes |
 | Abstract Base Class | Projects 2, 3, 4 | `BaseLLMProvider(ABC)` / `LLMProvider(ABC)` |
-| Factory Function | Project 4 | `get_llm_provider()` returns configured instance |
+| Factory Function | Projects 4, 7 | `get_llm_provider()` / `get_llm()` returns configured instance |
 | Dataclass Models | Projects 3, 4 | `@dataclass` for structured data (RAGResponse, SearchResult) |
-| Pydantic Settings | Project 2 | Environment variable configuration with validation |
+| Pydantic Settings | Projects 2, 7 | Environment variable configuration with validation |
+| LangGraph ReAct Agent | Project 7 | `StateGraph` with tool-calling loop + post-processing |
+| No-Code Workflow | Project 6 | n8n JSON workflow with scheduled triggers |
 
 ---
 
@@ -746,8 +1008,11 @@ All four AI projects (Projects 2, 3, 4, 5) implement the same provider abstracti
 |-------------|---------|-------------|-------|
 | **Python** | 3.10+ | All projects | 3.9+ for RAG only |
 | **pip** | Latest | All projects | Package manager |
+| **Node.js** | 18+ | Project 6 | n8n runtime |
+| **n8n** | v1.0+ | Project 6 | Workflow platform |
+| **Ollama** | Latest | Projects 3, 4, 6, 7 | Local LLM runtime |
 | **Tesseract OCR** | Latest | Project 2 | System-level install |
-| **Internet** | — | All (except Ollama) | API access |
+| **Internet** | — | All (except Ollama/demo) | API access |
 | **Git** | Latest | — | Optional, for cloning |
 
 ### Recommended: Virtual Environments
@@ -810,7 +1075,7 @@ OPENAI_API_KEY=sk-your-key
 OPENAI_MODEL=gpt-4o
 
 # ═══════════════════════════════════════════════════
-#  TAVILY WEB SEARCH (Project 4 only)
+#  TAVILY WEB SEARCH (Projects 4, 6)
 #  Get key: https://tavily.com (1000 searches/month free)
 # ═══════════════════════════════════════════════════
 TAVILY_API_KEY=tvly-your-key
@@ -836,7 +1101,11 @@ VISION_MODEL=gemini-1.5-flash
 | `TAVILY_API_KEY` error | 4 | Sign up at [tavily.com](https://tavily.com) for free key (1000/month) |
 | No charts detected | 2 | Requires `GEMINI_API_KEY` for Vision model; text analysis still works without it |
 | FAISS import error | 3 | Install with `pip install faiss-cpu` (not `faiss`) |
-| Ollama not responding | 2, 3, 4 | Run `ollama serve` in a separate terminal; pull model with `ollama pull llama3.2` |
+| Ollama not responding | 2, 3, 4, 6, 7 | Run `ollama serve` in a separate terminal; pull model with `ollama pull llama3.1` |
+| n8n workflow not triggering | 6 | Ensure n8n is running (`n8n start`); check Google Sheets OAuth2 credentials in n8n UI |
+| Overpass API timeout | 7 | Reduce `DEFAULT_RADIUS_KM`; enable `DEMO_MODE=true` for offline testing |
+| LangGraph tool output garbled | 7 | Expected with very small models; post-processing guard auto-corrects; try a larger model |
+| Streamlit not loading | 7 | Run `streamlit run app.py` from the project directory; ensure port 8501 is free |
 
 ---
 
