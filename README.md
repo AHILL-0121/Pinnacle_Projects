@@ -8,11 +8,12 @@
 [![Flask](https://img.shields.io/badge/Flask-3.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2+-FF6F00?style=for-the-badge)](https://langchain-ai.github.io/langgraph/)
+[![CrewAI](https://img.shields.io/badge/CrewAI-Multi--Agent-FF5722?style=for-the-badge)](https://github.com/crewAIInc/crewAI)
 [![n8n](https://img.shields.io/badge/n8n-Workflow-EA4B71?style=for-the-badge&logo=n8n&logoColor=white)](https://n8n.io)
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Seven interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, no-code workflow automation, and competitor intelligence — each built with enterprise-grade architecture.*
+*Eight interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, and competitor intelligence — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -29,6 +30,7 @@
 - [Project 5 — Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant)
 - [Project 6 — AI Content Creator Agent (n8n)](#-project-6--ai-content-creator-agent-n8n)
 - [Project 7 — Competitor Intelligence System (LangGraph)](#-project-7--competitor-intelligence-system-langgraph)
+- [Project 8 — Logistics Optimization System (CrewAI)](#-project-8--logistics-optimization-system-crewai)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -39,7 +41,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **seven full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **eight full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -50,6 +52,7 @@ This monorepo contains **seven full-stack, independently deployable projects** o
 | **L3** | [Intelligent Travel Assistant](#-project-5--intelligent-travel-assistant) | Travel AI Agent | LangChain Agent, WeatherAPI, DuckDuckGo |
 | **L3** | [AI Content Creator Agent](#-project-6--ai-content-creator-agent-n8n) | No-Code Automation | n8n, Ollama, Tavily, Google Sheets |
 | **L3** | [Competitor Intelligence System](#-project-7--competitor-intelligence-system-langgraph) | Retail Intelligence | LangGraph, LangChain, OpenStreetMap, Streamlit |
+| **L3** | [Logistics Optimization System](#-project-8--logistics-optimization-system-crewai) | Supply Chain Optimization | CrewAI, Ollama, Deterministic Metrics Engine |
 
 ### What Makes These Production-Grade
 
@@ -144,31 +147,49 @@ Pinnacle_Projects/
     │   ├── AI Content Creator Agent.json #   n8n workflow definition
     │   └── readme.md                     #   Full documentation
     │
-    └── Building your First AI Agent with LangGraph/  # PROJECT 7: Competitor intelligence
-        ├── main.py                       #   CLI entry point (interactive / demo)
-        ├── app.py                        #   Streamlit web chat UI
-        ├── config.py                     #   Environment configuration
+    ├── Building your First AI Agent with LangGraph/  # PROJECT 7: Competitor intelligence
+    │   ├── main.py                       #   CLI entry point (interactive / demo)
+    │   ├── app.py                        #   Streamlit web chat UI
+    │   ├── config.py                     #   Environment configuration
+    │   ├── requirements.txt
+    │   ├── agent/
+    │   │   ├── graph.py                  #   LangGraph ReAct agent + post-processing
+    │   │   ├── state.py                  #   Agent state schema
+    │   │   └── prompts.py                #   System prompt (tool-use rules)
+    │   ├── tools/
+    │   │   ├── _store.py                 #   Shared in-memory data store
+    │   │   ├── location_search.py        #   Geocoding (Nominatim)
+    │   │   ├── competitor_fetch.py        #   Nearby competitor search (Overpass API)
+    │   │   ├── footfall_estimator.py      #   Busy-hour estimation
+    │   │   └── report_formatter.py        #   Markdown report generator
+    │   ├── services/
+    │   │   ├── llm_service.py            #   LLM provider factory (Ollama / OpenAI)
+    │   │   ├── places_service.py          #   Nominatim + Overpass API
+    │   │   └── cache.py                  #   Disk-based response caching
+    │   ├── models/
+    │   │   └── schemas.py                #   Pydantic v2 data models
+    │   └── data/
+    │       ├── demo/                     #   Sample competitor data
+    │       ├── cache/                    #   API response cache
+    │       └── reports/                  #   Generated reports
+    │
+    └── Building your First AI Agent with CrewAI/     # PROJECT 8: Logistics optimization
+        ├── main.py                       #   CLI entry point (argparse)
+        ├── crew.py                       #   Crew assembly (sequential process)
+        ├── config.py                     #   LLM & runtime config (env-var overridable)
         ├── requirements.txt
-        ├── agent/
-        │   ├── graph.py                  #   LangGraph ReAct agent + post-processing
-        │   ├── state.py                  #   Agent state schema
-        │   └── prompts.py                #   System prompt (tool-use rules)
-        ├── tools/
-        │   ├── _store.py                 #   Shared in-memory data store
-        │   ├── location_search.py        #   Geocoding (Nominatim)
-        │   ├── competitor_fetch.py        #   Nearby competitor search (Overpass API)
-        │   ├── footfall_estimator.py      #   Busy-hour estimation
-        │   └── report_formatter.py        #   Markdown report generator
-        ├── services/
-        │   ├── llm_service.py            #   LLM provider factory (Ollama / OpenAI)
-        │   ├── places_service.py          #   Nominatim + Overpass API
-        │   └── cache.py                  #   Disk-based response caching
+        ├── agents/
+        │   ├── __init__.py
+        │   └── definitions.py            #   Logistics Analyst & Optimization Strategist
+        ├── tasks/
+        │   ├── __init__.py
+        │   └── definitions.py            #   Pre-compute engines + task prompts
         ├── models/
-        │   └── schemas.py                #   Pydantic v2 data models
-        └── data/
-            ├── demo/                     #   Sample competitor data
-            ├── cache/                    #   API response cache
-            └── reports/                  #   Generated reports
+        │   ├── __init__.py
+        │   └── schemas.py                #   Product, Route, Inventory dataclasses
+        ├── data/
+        │   └── sample_logistics.json      #   Demo dataset (5 products, 6 routes)
+        └── output/                       #   Auto-generated reports (git-ignored)
 ```
 
 ---
@@ -959,11 +980,120 @@ streamlit run app.py
 
 ---
 
+## � Project 8 — Logistics Optimization System (CrewAI)
+
+### Purpose
+
+A **production-grade, multi-agent logistics optimization system** that pre-computes all numerical metrics in Python and delegates only interpretation and strategy synthesis to the LLM — eliminating arithmetic hallucination entirely. Built with **CrewAI** and a local **Ollama** LLM.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Agent Framework** | CrewAI ≥ 0.86.0 |
+| **LLM** | Ollama — LLaMA 3.1 (local, via OpenAI-compatible `/v1` endpoint) |
+| **Process** | Sequential (Analyst → Strategist) |
+| **Key Innovation** | Deterministic Metrics Engine — all numbers pre-computed in Python |
+| **Python Version** | 3.10+ |
+
+### Architecture — Hallucination-Proof Pipeline
+
+The system's key design principle: **the LLM never calculates — it only interprets**.
+
+```
+Input JSON (Products + Routes + Inventory)
+        │
+        ▼
+┌─────────────────────────────────┐
+│  Deterministic Metrics Engine   │  ← Python pre-computes speed, cost/km,
+│  (tasks/definitions.py)        │    excess stock, waste, classifications
+└────────────┬────────────────────┘
+             │ facts (read-only)
+             ▼
+┌─────────────────────────────────┐
+│  Logistics Analyst  (Agent 1)  │  → Interprets metrics, flags ALL
+│                                │    inefficiencies exhaustively
+└────────────┬────────────────────┘
+             │ structured analysis
+             ▼
+┌─────────────────────────────────┐
+│  Optimization Strategist       │  → Prioritized action plan with
+│  (Agent 2)                     │    bounded savings estimates
+└────────────┬────────────────────┘
+             │
+             ▼
+       Markdown Report (auditable)
+```
+
+### Pre-Computed Metrics (No LLM Math)
+
+| Metric | Computation |
+|--------|-------------|
+| Route speed | `distance_km / delivery_time_hr` |
+| Cost per km | `fuel_cost_usd / distance_km` |
+| Route overlaps | Same origin→destination served by multiple route IDs |
+| Excess stock | `stock_level - (turnover_rate × reorder_point)` |
+| Monthly waste | `max(excess, 0) × holding_cost_per_unit_usd` |
+| Classification | Turnover < 1.0 → Overstocked · > 6.0 → Stockout Risk · = 6.0 → Borderline |
+
+Prompt guardrail: *"⚠️ CRITICAL: Do NOT recalculate any numbers. Use ONLY the pre-computed values."*
+
+### Agents
+
+| Agent | Role | What It Does |
+|-------|------|--------------|
+| **Logistics Analyst** | Identify inefficiencies | Exhaustively flags every route violation (speed < 80 km/hr, cost/km > $0.45), overlapping routes, and inventory classifications |
+| **Optimization Strategist** | Propose strategies | Prioritized action plans for route consolidation, re-routing, inventory right-sizing; bounded savings estimates; quick wins |
+
+### Sample Output (Demo Dataset)
+
+| Metric | Value |
+|--------|-------|
+| Routes flagged (speed < 80) | R001, R002, R003, R006 |
+| Cost-inefficient route | R002 ($0.49/km) |
+| Overlapping routes | R001 + R006 (Chicago → Detroit) |
+| Most overstocked product | P003 — 7,400 excess units |
+| Monthly holding waste | $10,301 |
+| Annual holding waste | $123,612 |
+| Strategist savings | ≤ $123,612 (bounded) |
+
+### Quick Start
+
+```powershell
+cd "L3/Building your First AI Agent with CrewAI"
+pip install -r requirements.txt
+
+# Ensure Ollama is running with llama3.1
+ollama pull llama3.1
+ollama serve
+
+# Default run
+python main.py
+
+# Custom data + output
+python main.py --data path/to/data.json --output output/report.md
+
+# Quiet mode
+python main.py --quiet
+```
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `OLLAMA_MODEL` | `llama3.1` | Ollama model name |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
+| `LLM_TEMPERATURE` | `0.2` | Lower → more deterministic |
+| `CREW_VERBOSE` | `true` | Show agent reasoning |
+| `MAX_EXECUTION_TIMEOUT` | `120` | Max seconds for pipeline |
+
+---
+
 ## 🔗 Shared Technical Concepts
 
 ### Multi-LLM Provider Pattern
 
-All five AI projects (Projects 2, 3, 4, 5, 6, 7) implement the same provider abstraction:
+All AI projects (Projects 2, 3, 4, 5, 6, 7, 8) implement LLM provider abstractions:
 
 ```
 ┌──────────────────────────────────────┐
@@ -998,6 +1128,8 @@ All five AI projects (Projects 2, 3, 4, 5, 6, 7) implement the same provider abs
 | Dataclass Models | Projects 3, 4 | `@dataclass` for structured data (RAGResponse, SearchResult) |
 | Pydantic Settings | Projects 2, 7 | Environment variable configuration with validation |
 | LangGraph ReAct Agent | Project 7 | `StateGraph` with tool-calling loop + post-processing |
+| CrewAI Sequential Crew | Project 8 | Multi-agent pipeline with deterministic pre-compute + prompt guardrails |
+| Deterministic Pre-compute | Project 8 | All numerical metrics computed in Python, LLM interprets only |
 | No-Code Workflow | Project 6 | n8n JSON workflow with scheduled triggers |
 
 ---
@@ -1010,7 +1142,7 @@ All five AI projects (Projects 2, 3, 4, 5, 6, 7) implement the same provider abs
 | **pip** | Latest | All projects | Package manager |
 | **Node.js** | 18+ | Project 6 | n8n runtime |
 | **n8n** | v1.0+ | Project 6 | Workflow platform |
-| **Ollama** | Latest | Projects 3, 4, 6, 7 | Local LLM runtime |
+| **Ollama** | Latest | Projects 3, 4, 6, 7, 8 | Local LLM runtime |
 | **Tesseract OCR** | Latest | Project 2 | System-level install |
 | **Internet** | — | All (except Ollama/demo) | API access |
 | **Git** | Latest | — | Optional, for cloning |
@@ -1101,11 +1233,13 @@ VISION_MODEL=gemini-1.5-flash
 | `TAVILY_API_KEY` error | 4 | Sign up at [tavily.com](https://tavily.com) for free key (1000/month) |
 | No charts detected | 2 | Requires `GEMINI_API_KEY` for Vision model; text analysis still works without it |
 | FAISS import error | 3 | Install with `pip install faiss-cpu` (not `faiss`) |
-| Ollama not responding | 2, 3, 4, 6, 7 | Run `ollama serve` in a separate terminal; pull model with `ollama pull llama3.1` |
+| Ollama not responding | 2, 3, 4, 6, 7, 8 | Run `ollama serve` in a separate terminal; pull model with `ollama pull llama3.1` |
 | n8n workflow not triggering | 6 | Ensure n8n is running (`n8n start`); check Google Sheets OAuth2 credentials in n8n UI |
 | Overpass API timeout | 7 | Reduce `DEFAULT_RADIUS_KM`; enable `DEMO_MODE=true` for offline testing |
 | LangGraph tool output garbled | 7 | Expected with very small models; post-processing guard auto-corrects; try a larger model |
 | Streamlit not loading | 7 | Run `streamlit run app.py` from the project directory; ensure port 8501 is free |
+| `Connection error` (CrewAI) | 8 | Ollama must be running: `ollama serve`. Verify with `ollama list` |
+| LLM omits route violations | 8 | Non-deterministic LLM behavior; re-run — prompt guardrails catch most cases |
 
 ---
 

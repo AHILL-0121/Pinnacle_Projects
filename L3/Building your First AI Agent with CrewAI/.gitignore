@@ -1,0 +1,3 @@
+# Generated reports (re-create with: python main.py)
+output/*.md
+!output/.gitkeep

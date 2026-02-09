@@ -1,0 +1,107 @@
+{
+  "products": [
+    { "product_id": "P001", "name": "Industrial Bearings", "category": "Machinery Parts" },
+    { "product_id": "P002", "name": "Electronic Sensors", "category": "Electronics" },
+    { "product_id": "P003", "name": "Steel Fasteners", "category": "Hardware" },
+    { "product_id": "P004", "name": "Hydraulic Pumps", "category": "Machinery Parts" },
+    { "product_id": "P005", "name": "LED Panels", "category": "Electronics" }
+  ],
+  "routes": [
+    {
+      "route_id": "R001",
+      "origin": "Warehouse A - Chicago",
+      "destination": "Distribution Center 1 - Detroit",
+      "distance_km": 382,
+      "delivery_time_hr": 5.5,
+      "product_ids": ["P001", "P003"],
+      "fuel_cost_usd": 145.00
+    },
+    {
+      "route_id": "R002",
+      "origin": "Warehouse A - Chicago",
+      "destination": "Distribution Center 2 - Indianapolis",
+      "distance_km": 263,
+      "delivery_time_hr": 6.2,
+      "product_ids": ["P002", "P005"],
+      "fuel_cost_usd": 130.00
+    },
+    {
+      "route_id": "R003",
+      "origin": "Warehouse B - Dallas",
+      "destination": "Distribution Center 1 - Detroit",
+      "distance_km": 1620,
+      "delivery_time_hr": 22.0,
+      "product_ids": ["P004"],
+      "fuel_cost_usd": 580.00
+    },
+    {
+      "route_id": "R004",
+      "origin": "Warehouse B - Dallas",
+      "destination": "Distribution Center 3 - Atlanta",
+      "distance_km": 1250,
+      "delivery_time_hr": 14.5,
+      "product_ids": ["P001", "P004"],
+      "fuel_cost_usd": 420.00
+    },
+    {
+      "route_id": "R005",
+      "origin": "Warehouse A - Chicago",
+      "destination": "Distribution Center 3 - Atlanta",
+      "distance_km": 1150,
+      "delivery_time_hr": 13.0,
+      "product_ids": ["P002", "P003", "P005"],
+      "fuel_cost_usd": 390.00
+    },
+    {
+      "route_id": "R006",
+      "origin": "Warehouse A - Chicago",
+      "destination": "Distribution Center 1 - Detroit",
+      "distance_km": 395,
+      "delivery_time_hr": 7.8,
+      "product_ids": ["P002"],
+      "fuel_cost_usd": 160.00
+    }
+  ],
+  "inventory": [
+    {
+      "product_id": "P001",
+      "warehouse": "Warehouse A - Chicago",
+      "stock_level": 4500,
+      "turnover_rate": 1.2,
+      "reorder_point": 500,
+      "holding_cost_per_unit_usd": 0.71
+    },
+    {
+      "product_id": "P002",
+      "warehouse": "Warehouse A - Chicago",
+      "stock_level": 120,
+      "turnover_rate": 8.5,
+      "reorder_point": 80,
+      "holding_cost_per_unit_usd": 3.75
+    },
+    {
+      "product_id": "P003",
+      "warehouse": "Warehouse A - Chicago",
+      "stock_level": 8000,
+      "turnover_rate": 0.6,
+      "reorder_point": 1000,
+      "holding_cost_per_unit_usd": 0.73
+    },
+    {
+      "product_id": "P004",
+      "warehouse": "Warehouse B - Dallas",
+      "stock_level": 75,
+      "turnover_rate": 6.0,
+      "reorder_point": 30,
+      "holding_cost_per_unit_usd": 24.00
+    },
+    {
+      "product_id": "P005",
+      "warehouse": "Warehouse A - Chicago",
+      "stock_level": 3200,
+      "turnover_rate": 0.9,
+      "reorder_point": 400,
+      "holding_cost_per_unit_usd": 0.75
+    }
+  ]
+}
