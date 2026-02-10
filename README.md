@@ -13,7 +13,7 @@
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Eight interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, and competitor intelligence — each built with enterprise-grade architecture.*
+*Nine interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, competitor intelligence, and end-to-end machine learning — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -31,6 +31,7 @@
 - [Project 6 — AI Content Creator Agent (n8n)](#-project-6--ai-content-creator-agent-n8n)
 - [Project 7 — Competitor Intelligence System (LangGraph)](#-project-7--competitor-intelligence-system-langgraph)
 - [Project 8 — Logistics Optimization System (CrewAI)](#-project-8--logistics-optimization-system-crewai)
+- [Project 9 — Health Classification ML Model](#-project-9--health-classification-ml-model)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -41,7 +42,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **eight full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **nine full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -53,6 +54,7 @@ This monorepo contains **eight full-stack, independently deployable projects** o
 | **L3** | [AI Content Creator Agent](#-project-6--ai-content-creator-agent-n8n) | No-Code Automation | n8n, Ollama, Tavily, Google Sheets |
 | **L3** | [Competitor Intelligence System](#-project-7--competitor-intelligence-system-langgraph) | Retail Intelligence | LangGraph, LangChain, OpenStreetMap, Streamlit |
 | **L3** | [Logistics Optimization System](#-project-8--logistics-optimization-system-crewai) | Supply Chain Optimization | CrewAI, Ollama, Deterministic Metrics Engine |
+| **L4** | [Health Classification ML Model](#-project-9--health-classification-ml-model) | Insurance Risk Prediction | scikit-learn, XGBoost, Pandas, Seaborn |
 
 ### What Makes These Production-Grade
 
@@ -190,6 +192,18 @@ Pinnacle_Projects/
         ├── data/
         │   └── sample_logistics.json      #   Demo dataset (5 products, 6 routes)
         └── output/                       #   Auto-generated reports (git-ignored)
+│
+└── L4/                                   # Machine Learning projects
+    └── Building your First ML Model.ipynb # PROJECT 9: Health classification pipeline
+        ├── Section 1: Imports             #   numpy, pandas, sklearn, xgboost
+        ├── Section 2: Load & Inspect      #   CSV ingestion, shape, dtypes, missing values
+        ├── Section 3: EDA                 #   Distributions, box plots, heatmap
+        ├── Section 4: Preprocessing       #   Imputation → scaling → stratified split
+        ├── Section 5: Model Training      #   7 models, 5-fold stratified CV
+        ├── Section 6: Evaluation          #   Confusion matrix, ROC curves
+        ├── Section 7: Feature Importance  #   Top-20 features bar chart
+        ├── Section 8: Prediction Function #   predict_health_status()
+        └── Section 9: Summary             #   Performance comparison table
 ```
 
 ---
@@ -1086,6 +1100,91 @@ python main.py --quiet
 | `LLM_TEMPERATURE` | `0.2` | Lower → more deterministic |
 | `CREW_VERBOSE` | `true` | Show agent reasoning |
 | `MAX_EXECUTION_TIMEOUT` | `120` | Max seconds for pipeline |
+
+---
+
+## 🧠 Project 9 — Health Classification ML Model
+
+### Purpose
+
+An **end-to-end machine learning pipeline** for **Anova Insurance** that predicts whether an individual is **Healthy (0)** or **Unhealthy (1)** based on 22 lifestyle, biometric, and medical features. The model supports premium pricing decisions by quantifying health risk.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Format** | Jupyter Notebook (single self-contained file) |
+| **ML Framework** | scikit-learn 1.3+ |
+| **Optional Boost** | XGBoost 1.7+ |
+| **Visualization** | Matplotlib, Seaborn |
+| **Data Processing** | Pandas, NumPy |
+| **Python Version** | 3.10+ |
+
+### Models Compared
+
+| Model | Type | Key Config |
+|-------|------|------------|
+| Logistic Regression | Linear | `max_iter=1000` |
+| Decision Tree | Tree | Default (gini) |
+| Random Forest | Ensemble | `n_estimators=200` |
+| Gradient Boosting | Ensemble | `n_estimators=200` |
+| K-Nearest Neighbors | Distance | `n_neighbors=7` |
+| SVM | Kernel | `probability=True` |
+| XGBoost *(optional)* | Boosting | `n_estimators=200` |
+
+### Pipeline Flow
+
+```
+CSV Data → EDA (5 visualization types) → Preprocessing (impute + scale)
+    → Train 7 models (5-fold Stratified CV) → Select best by ROC-AUC
+    → Evaluate (classification report + confusion matrix + ROC curves)
+    → Feature importance → Reusable predict_health_status() function
+```
+
+### Evaluation Metrics
+
+- **5-fold Stratified Cross-Validation** with ROC-AUC scoring
+- **Test set accuracy** and **Test set ROC-AUC**
+- **Classification report** (precision, recall, F1 per class)
+- **Confusion matrix** and **ROC curves** for all models
+
+### Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **22 input features** | Age, BMI, Blood Pressure, Cholesterol, Glucose, Heart Rate, Sleep, Exercise, Smoking, Diet, and more |
+| **Stratified splitting** | 80/20 split preserving class distribution |
+| **Median imputation** | Robust to outliers |
+| **Standard scaling** | Required for SVM, KNN, Logistic Regression |
+| **Prediction function** | `predict_health_status(input_dict)` returns label + probability |
+
+### Quick Start
+
+```powershell
+cd "L4"
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install numpy pandas matplotlib seaborn scikit-learn jupyter xgboost
+jupyter notebook "Building your First ML Model.ipynb"
+```
+
+> **Note:** Place the dataset CSV (`mDugQt7wQOKNNIAFjVku_Healthcare_Data_Preprocessed_FIXED.csv`) in the `L4/` directory before running.
+
+### Sample Prediction
+
+```python
+example = {
+    'Age': 45, 'BMI': 28.5, 'Blood_Pressure': 130, 'Cholesterol': 210,
+    'Glucose_Level': 105, 'Heart_Rate': 80, 'Sleep_Hours': 6,
+    'Exercise_Hours': 0.5, 'Water_Intake': 1.5, 'Stress_Level': 7,
+    'Smoking': 2, 'Alcohol': 1, 'Diet': 0, 'MentalHealth': 1,
+    'PhysicalActivity': 0, 'MedicalHistory': 1, 'Allergies': 0,
+    'Diet_Type_Vegan': 0, 'Diet_Type_Vegetarian': 0,
+    'Blood_Group_AB': 0, 'Blood_Group_B': 1, 'Blood_Group_O': 0
+}
+result = predict_health_status(example)
+# {'prediction': 'Unhealthy', 'unhealthy_probability': 0.8723}
+```
 
 ---
 
