@@ -33,6 +33,7 @@
 - [Project 8 — Logistics Optimization System (CrewAI)](#-project-8--logistics-optimization-system-crewai)
 - [Project 9 — Health Classification ML Model](#-project-9--health-classification-ml-model)
 - [Project 10 — NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration)
+- [Project 11 — Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -43,7 +44,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **ten full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **eleven full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -57,6 +58,7 @@ This monorepo contains **ten full-stack, independently deployable projects** org
 | **L3** | [Logistics Optimization System](#-project-8--logistics-optimization-system-crewai) | Supply Chain Optimization | CrewAI, Ollama, Deterministic Metrics Engine |
 | **L4** | [Health Classification ML Model](#-project-9--health-classification-ml-model) | Insurance Risk Prediction | scikit-learn, XGBoost, Pandas, Seaborn |
 | **L4** | [NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration) | Geospatial Regression | scikit-learn, Pandas, NumPy, Matplotlib |
+| **L4** | [Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning) | Environmental AI | MLP Neural Networks, scikit-learn, Pandas, Seaborn |
 
 ### What Makes These Production-Grade
 
@@ -205,9 +207,20 @@ Pinnacle_Projects/
     │       ├── Section 5: Evaluation      #   Confusion matrix, ROC curves, AUC
     │       └── Section 6: Feature Importance # RF + GB averaged importances
     │
-    └── Foundational ML Algorithms/        # PROJECT 10: NYC Taxi trip duration
+    ├── Foundational ML Algorithms/        # PROJECT 10: NYC Taxi trip duration
+    │   ├── README.md
+    │   └── nyc_taxi_trip_duration(1).ipynb  # Regression: LR / RF / GBR
+    │
+    └── Introduction to Deep Learning using PyTorch/  # PROJECT 11: Water quality prediction
         ├── README.md
-        └── nyc_taxi_trip_duration(1).ipynb  # Regression: LR / RF / GBR
+        ├── water_quality.csv               #   CPCB dataset (19,029 records)
+        └── water_quality_prediction.ipynb  #   Dual MLP: WQI regression + classification
+            ├── Section 1–2: Imports & Load #     pandas, numpy, sklearn, seaborn
+            ├── Section 3: Preprocessing    #     Cleaning → encode → split → scale
+            ├── Section 4: EDA              #     Heatmap, WQI distributions, correlations
+            ├── Section 5: Regression MLP   #     15→512→256→128→64→1 (Adam, early stop)
+            ├── Section 6: Classification MLP #   15→512→256→128→64→5 (Softmax)
+            └── Section 7: Final Summary    #     Side-by-side performance table
 ```
 
 ---
@@ -1244,6 +1257,107 @@ python -m venv venv
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 jupyter notebook "nyc_taxi_trip_duration(1).ipynb"
 ```
+
+---
+
+## 💧 Project 11 — Water Quality Prediction (Deep Learning)
+
+### Purpose
+
+An **end-to-end deep learning notebook** that trains two Multi-Layer Perceptron (MLP) neural networks on India's **Central Pollution Control Board (CPCB)** water quality dataset — one for **WQI regression** and one for **multi-class water quality classification** — demonstrating the full ML workflow from EDA through residual analysis on real environmental data.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Format** | Jupyter Notebook (single self-contained file) |
+| **ML Framework** | scikit-learn 1.3+ (`MLPRegressor` / `MLPClassifier`) |
+| **Visualization** | Matplotlib, Seaborn |
+| **Data Processing** | Pandas, NumPy |
+| **Dataset** | CPCB Water Quality — 19,029 records, 15 physicochemical indicators |
+| **Python Version** | 3.10+ |
+
+### Dual-Task Problem
+
+| Task | Model | Output |
+|------|-------|--------|
+| **WQI Regression** | `MLPRegressor` | Continuous Water Quality Index score |
+| **Quality Classification** | `MLPClassifier` | 5-class water quality category |
+
+### Neural Network Architecture
+
+Both models share the same deep MLP backbone:
+
+```
+Input(15) → Dense(512, ReLU) → Dense(256, ReLU) → Dense(128, ReLU) → Dense(64, ReLU)
+    ├── → Dense(1, Linear)     [Regression — MSE loss]
+    └── → Dense(5, Softmax)    [Classification — Cross-Entropy loss]
+```
+
+| Hyperparameter | Value |
+|----------------|-------|
+| Optimizer | Adam |
+| Learning Rate | 0.001 |
+| Batch Size | 256 |
+| Early Stopping | Yes (`n_iter_no_change=20`) |
+| Max Iterations | 500 |
+| Validation Split | 10% |
+
+### Dataset
+
+| Property | Value |
+|----------|-------|
+| **Source** | Central Pollution Control Board (CPCB), India |
+| **Records** | 19,029 samples |
+| **Period** | 2019–2022 |
+| **Features** | Year, pH, EC, CO3, HCO3, Cl, SO4, NO3, TH, Ca, Mg, Na, K, F, TDS (15 total) |
+| **Regression Target** | `WQI` (continuous) |
+| **Classification Target** | `Water Quality Classification` (5 classes) |
+
+### Pipeline Flow
+
+```
+CSV Load (19,029 rows)
+    → EDA (correlation heatmap, distribution plots, WQI box plots)
+    → Preprocessing (drop NaN → label-encode → 80/20 split → StandardScaler)
+    → Model 1: MLPRegressor (512→256→128→64→1)  ← MSE loss
+        → Evaluate: R², RMSE, MAE
+        → Plot: loss curve, actual vs. predicted, residuals
+    → Model 2: MLPClassifier (512→256→128→64→5) ← Cross-Entropy
+        → Evaluate: Accuracy, F1-Macro, F1-Weighted
+        → Plot: confusion matrix, per-class P/R/F1 bar chart
+    → Final Summary Table
+```
+
+### Evaluation Metrics
+
+**Regression (Model 1)**
+
+| Metric | Description |
+|--------|-------------|
+| R² Train / Test | Coefficient of determination |
+| RMSE Test | Root Mean Squared Error |
+| MAE Test | Mean Absolute Error |
+
+**Classification (Model 2)**
+
+| Metric | Description |
+|--------|-------------|
+| Accuracy Train / Test | Proportion of correct predictions |
+| F1 Macro | Unweighted average F1 across 5 classes |
+| F1 Weighted | Class-size-weighted average F1 |
+
+### Quick Start
+
+```powershell
+cd "L4/Introduction to Deep Learning using PyTorch"
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+jupyter notebook water_quality_prediction.ipynb
+```
+
+> **No external API keys or additional downloads required.** `water_quality.csv` is bundled in the project folder. Run all cells top-to-bottom (Kernel → Restart & Run All).
 
 ---
 
