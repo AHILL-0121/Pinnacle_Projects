@@ -11,16 +11,24 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Dataset](#-dataset)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Workflow](#-workflow)
-- [Models](#-models)
-- [Evaluation Metrics](#-evaluation-metrics)
-- [Visualizations](#-visualizations)
-- [Quick Start](#-quick-start)
-- [Dependencies](#-dependencies)
+- [💧 Water Quality Prediction — Deep Learning Neural Networks (Project 11)](#-water-quality-prediction--deep-learning-neural-networks-project-11)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [🎯 Overview](#-overview)
+  - [📊 Dataset](#-dataset)
+    - [Class Distribution](#class-distribution)
+  - [⚗️ Features](#️-features)
+  - [🧠 Architecture](#-architecture)
+  - [🔄 Workflow](#-workflow)
+  - [🤖 Models](#-models)
+    - [Model 1 — WQI Regression](#model-1--wqi-regression)
+    - [Model 2 — Water Quality Classification](#model-2--water-quality-classification)
+  - [📈 Evaluation Metrics](#-evaluation-metrics)
+    - [Regression](#regression)
+    - [Classification](#classification)
+  - [🖼️ Visualizations](#️-visualizations)
+  - [🚀 Quick Start](#-quick-start)
+  - [📦 Dependencies](#-dependencies)
+  - [📁 File Structure](#-file-structure)
 
 ---
 
