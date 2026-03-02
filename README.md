@@ -13,7 +13,7 @@
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Ten interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, competitor intelligence, end-to-end machine learning, and foundational regression modeling — each built with enterprise-grade architecture.*
+*Twelve interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, competitor intelligence, end-to-end machine learning, foundational regression modeling, deep learning neural networks, and comparative NLP architecture benchmarking — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -34,6 +34,7 @@
 - [Project 9 — Health Classification ML Model](#-project-9--health-classification-ml-model)
 - [Project 10 — NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration)
 - [Project 11 — Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning)
+- [Project 12 — Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -44,7 +45,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **eleven full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **twelve full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -59,6 +60,7 @@ This monorepo contains **eleven full-stack, independently deployable projects** 
 | **L4** | [Health Classification ML Model](#-project-9--health-classification-ml-model) | Insurance Risk Prediction | scikit-learn, XGBoost, Pandas, Seaborn |
 | **L4** | [NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration) | Geospatial Regression | scikit-learn, Pandas, NumPy, Matplotlib |
 | **L4** | [Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning) | Environmental AI | MLP Neural Networks, scikit-learn, Pandas, Seaborn |
+| **L4** | [Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp) | NLP & Deep Learning | PyTorch, Transformers (BERT), RNN/LSTM/GRU, HuggingFace |
 
 ### What Makes These Production-Grade
 
@@ -211,16 +213,33 @@ Pinnacle_Projects/
     │   ├── README.md
     │   └── nyc_taxi_trip_duration(1).ipynb  # Regression: LR / RF / GBR
     │
-    └── Introduction to Deep Learning using PyTorch/  # PROJECT 11: Water quality prediction
+    ├── Introduction to Deep Learning using PyTorch/  # PROJECT 11: Water quality prediction
+    │   ├── README.md
+    │   ├── water_quality.csv               #   CPCB dataset (19,029 records)
+    │   └── water_quality_prediction.ipynb  #   Dual MLP: WQI regression + classification
+    │       ├── Section 1–2: Imports & Load #     pandas, numpy, sklearn, seaborn
+    │       ├── Section 3: Preprocessing    #     Cleaning → encode → split → scale
+    │       ├── Section 4: EDA              #     Heatmap, WQI distributions, correlations
+    │       ├── Section 5: Regression MLP   #     15→512→256→128→64→1 (Adam, early stop)
+    │       ├── Section 6: Classification MLP #   15→512→256→128→64→5 (Softmax)
+    │       └── Section 7: Final Summary    #     Side-by-side performance table
+    │
+    └── Natural Language Processing using PyTorch/    # PROJECT 12: Comparative NLP
         ├── README.md
-        ├── water_quality.csv               #   CPCB dataset (19,029 records)
-        └── water_quality_prediction.ipynb  #   Dual MLP: WQI regression + classification
-            ├── Section 1–2: Imports & Load #     pandas, numpy, sklearn, seaborn
-            ├── Section 3: Preprocessing    #     Cleaning → encode → split → scale
-            ├── Section 4: EDA              #     Heatmap, WQI distributions, correlations
-            ├── Section 5: Regression MLP   #     15→512→256→128→64→1 (Adam, early stop)
-            ├── Section 6: Classification MLP #   15→512→256→128→64→5 (Softmax)
-            └── Section 7: Final Summary    #     Side-by-side performance table
+        ├── requirements.txt
+        └── Natural Language Processing using PyTorch/
+            └── sentiment_analysis_comparative.ipynb  # BERT vs LSTM vs GRU vs RNN
+                ├── Sections 1–2: Imports & Config  #   PyTorch, Transformers, device check
+                ├── Section 3: Load & Preprocess    #   Sentiment140, clean, balance, split
+                ├── Section 4: Vocabulary           #   Top-10K word vocab (RNN-family)
+                ├── Section 5: DataLoaders          #   TextDataset + BertDataset
+                ├── Section 6: Model Definitions    #   RNN / LSTM / GRU / BertSentiment
+                ├── Section 7: Train/Eval Helpers   #   train_rnn, eval_bert, compute_metrics
+                ├── Sections 8–9: Model Training    #   All 4 models (5 epochs each)
+                ├── Section 10: Metrics Table       #   7-column comparative summary
+                ├── Section 11: Visualizations      #   5 saved charts → outputs/
+                ├── Section 12: Classification Rpts #   Per-class P/R/F1 per model
+                └── Section 13: Final Summary       #   Recommendations by use case
 ```
 
 ---
@@ -1358,6 +1377,124 @@ jupyter notebook water_quality_prediction.ipynb
 ```
 
 > **No external API keys or additional downloads required.** `water_quality.csv` is bundled in the project folder. Run all cells top-to-bottom (Kernel → Restart & Run All).
+
+---
+
+## 🐦 Project 12 — Comparative Sentiment Analysis (NLP)
+
+### Purpose
+
+An **end-to-end NLP benchmark notebook** that trains and rigorously compares **four neural architectures** — Vanilla RNN, LSTM, GRU, and fine-tuned BERT — on the **Twitter Sentiment140** dataset (1.6M tweets). Each model is evaluated across seven dimensions: Accuracy, Precision, Recall, F1-Score, ROC-AUC, training time, and peak memory — culminating in deployment recommendations by use case.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Format** | Jupyter Notebook (single self-contained file) |
+| **Deep Learning Framework** | PyTorch 2.0+ |
+| **Transformer Library** | HuggingFace Transformers (`bert-base-uncased`) |
+| **Classical ML / Metrics** | scikit-learn |
+| **Visualization** | Matplotlib, Seaborn |
+| **Dataset** | Sentiment140 — 1,600,000 tweets, balanced 6,000-sample subset |
+| **Task** | Binary sentiment classification (Negative / Positive) |
+| **Python Version** | 3.10+ |
+| **GPU** | Optional (CUDA auto-detected; falls back to CPU) |
+
+### Four-Model Comparison
+
+| Model | Architecture | Params | Pre-trained | Strength |
+|-------|-------------|:------:|:-----------:|----------|
+| **Vanilla RNN** | 2-layer RNN + Embedding | ~2M | ✗ | Baseline / academic |
+| **LSTM** | 2-layer LSTM + Embedding | ~2M | ✗ | Long-range context, CPU-friendly |
+| **GRU** | 2-layer GRU + Embedding | ~2M | ✗ | Faster than LSTM, near-equal accuracy |
+| **BERT** | Fine-tuned `bert-base-uncased` | ~110M | ✓ | Highest accuracy via contextual embeddings |
+
+### Model Architectures
+
+**RNN / LSTM / GRU**
+
+```
+Embedding(vocab=10K, dim=64) → RNN/LSTM/GRU(hidden=128, layers=2, drop=0.3)
+    → last hidden state → Dropout(0.3) → Linear(128→2) → CrossEntropyLoss
+```
+
+**BERT**
+
+```
+bert-base-uncased (110M params) → [CLS] token → Linear(768→2) → CrossEntropyLoss
+Optimizer: AdamW (lr=2e-5, weight_decay=0.01) + linear warmup + gradient clip (1.0)
+```
+
+### Dataset
+
+| Property | Value |
+|----------|-------|
+| **Name** | Sentiment140 (Stanford) |
+| **Total Records** | 1,600,000 tweets |
+| **Training Sample** | 6,000 (balanced — 3,000 Negative / 3,000 Positive) |
+| **Split** | 70% Train / 15% Validation / 15% Test (stratified) |
+| **Download** | [Kaggle — Sentiment140](https://www.kaggle.com/datasets/kazanova/sentiment140) |
+| **File** | `training.1600000.processed.noemoticon.csv` |
+
+> **Dataset is NOT bundled.** Download from Kaggle and place the CSV in the same folder as the notebook before running.
+
+### Pipeline Flow
+
+```
+CSV (1.6M tweets) → Balance + Sample (6K) → Clean text (regex)
+    → 70/15/15 stratified split
+    → Vocab build (RNN) + BertTokenizer (BERT)
+    ├── Train RNN / LSTM / GRU  (Adam, 5 epochs, batch=64)
+    └── Fine-tune BERT          (AdamW + linear warmup, 5 epochs, batch=32)
+         │
+         ▼
+7-metric comparative table → 5 saved visualisations → deployment guide
+```
+
+### Metrics Reported
+
+| Metric | Description |
+|--------|-------------|
+| Accuracy | Overall fraction correct on test set |
+| Precision (weighted) | Class-weighted positive predictive value |
+| Recall (weighted) | Class-weighted true positive rate |
+| F1-Score (weighted) | Harmonic mean of precision and recall |
+| ROC-AUC | Area under ROC curve (positive-class probability) |
+| Train Time (s) | Wall-clock training duration per model |
+| Peak Mem (MB) | `tracemalloc` peak traced memory |
+
+### Visualizations Generated
+
+| File (saved to `outputs/`) | Content |
+|----------------------------|---------| 
+| `f1_comparison.png` | Bar chart — weighted F1 per model |
+| `metrics_comparison.png` | Grouped bar — all 5 performance metrics |
+| `training_curves.png` | 2×4 grid — loss & accuracy curves (train vs. val) |
+| `confusion_matrices.png` | Normalised confusion matrices (4 panels) |
+| `computational_cost.png` | Training time & peak memory side-by-side |
+| `metrics_summary.csv` | Full comparative metrics table export |
+
+### Deployment Recommendations
+
+| Scenario | Best Model | Rationale |
+|----------|:----------:|-----------|
+| Production (accuracy critical) | **BERT** | Highest F1 via deep contextual embeddings |
+| Edge / mobile / low-latency | **GRU** | Best speed-accuracy trade-off |
+| Rapid prototyping / CPU-only | **LSTM or GRU** | Fast training, no GPU requirement |
+| Academic baseline | **Vanilla RNN** | Simplest architecture, useful lower-bound |
+
+### Quick Start
+
+```powershell
+cd "L4/Natural Language Processing using PyTorch"
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+# Place training.1600000.processed.noemoticon.csv in the notebook folder, then:
+jupyter notebook "Natural Language Processing using PyTorch/sentiment_analysis_comparative.ipynb"
+```
+
+> **GPU tip:** For ~20× faster BERT training, install the CUDA build of PyTorch from [pytorch.org/get-started/locally](https://pytorch.org/get-started/locally/) before running `pip install -r requirements.txt`.
 
 ---
 
