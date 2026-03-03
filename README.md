@@ -35,6 +35,8 @@
 - [Project 10 — NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration)
 - [Project 11 — Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning)
 - [Project 12 — Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp)
+- [Project 13 — Parameter-Efficient Fine-Tuning with QLoRA](#-project-13--parameter-efficient-fine-tuning-with-qlora)
+- [Project 14 — Building Custom Tokenizers from Scratch](#-project-14--building-custom-tokenizers-from-scratch)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -45,7 +47,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **twelve full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **fourteen full-stack, independently deployable projects** organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -61,6 +63,8 @@ This monorepo contains **twelve full-stack, independently deployable projects** 
 | **L4** | [NYC Taxi Trip Duration](#-project-10--nyc-taxi-trip-duration) | Geospatial Regression | scikit-learn, Pandas, NumPy, Matplotlib |
 | **L4** | [Water Quality Prediction (Deep Learning)](#-project-11--water-quality-prediction-deep-learning) | Environmental AI | MLP Neural Networks, scikit-learn, Pandas, Seaborn |
 | **L4** | [Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp) | NLP & Deep Learning | PyTorch, Transformers (BERT), RNN/LSTM/GRU, HuggingFace |
+| **L4** | [Parameter-Efficient Fine-Tuning with QLoRA](#-project-13--parameter-efficient-fine-tuning-with-qlora) | LLM Fine-Tuning | QLoRA, PEFT, BitsAndBytes, Transformers, W&B |
+| **L4** | [Building Custom Tokenizers from Scratch](#-project-14--building-custom-tokenizers-from-scratch) | Tokenization & NLP | BPE, HuggingFace Tokenizers, WikiText-2, Subword Processing |
 
 ### What Makes These Production-Grade
 
@@ -240,6 +244,29 @@ Pinnacle_Projects/
                 ├── Section 11: Visualizations      #   5 saved charts → outputs/
                 ├── Section 12: Classification Rpts #   Per-class P/R/F1 per model
                 └── Section 13: Final Summary       #   Recommendations by use case
+    │
+    ├── Finetuning LLMs/                   # PROJECT 13: Parameter-efficient fine-tuning
+    │   ├── README.md
+    │   └── qlora_bert_local_gpu.ipynb      #   QLoRA (4-bit quantization + LoRA adapters)
+    │       ├── Section 1: Dependencies     #     torch, transformers, peft, bitsandbytes
+    │       ├── Section 2: GPU Check        #     CUDA availability, VRAM detection
+    │       ├── Section 3: Configuration    #     Hyperparameters, LoRA config, batch sizes  
+    │       ├── Section 4: W&B Setup        #     Experiment tracking integration
+    │       ├── Section 5: Data Prep        #     IMDB sentiment tokenization & mapping
+    │       ├── Section 6: Model Setup      #     4-bit quantized BERT + LoRA adapters
+    │       ├── Section 7: Training         #     Parameter-efficient fine-tuning (~0.16% params)
+    │       └── Section 8: Evaluation       #     Accuracy, F1, memory usage analysis
+    │
+    └── Training LLMs from Scratch/         # PROJECT 14: Custom tokenizer creation  
+        ├── README.md
+        └── bpe_tokenizer_wikitext2.ipynb   #   BPE tokenizer from WikiText-2 corpus
+            ├── Section 1: Dependencies     #     datasets, tokenizers, transformers
+            ├── Section 2: Dataset Loading  #     WikiText-2 exploration & statistics
+            ├── Section 3: Data Cleaning    #     Remove duplicates, normalize text
+            ├── Section 4: Tokenizer Training #   BPE algorithm, 30K vocab, special tokens
+            ├── Section 5: Analysis         #     Vocabulary coverage, compression ratio
+            ├── Section 6: Evaluation       #     Sample tokenization, subword quality
+            └── Section 7: Export           #     Save tokenizer for downstream usage
 ```
 
 ---
@@ -1498,7 +1525,163 @@ jupyter notebook "Natural Language Processing using PyTorch/sentiment_analysis_c
 
 ---
 
-## �🔗 Shared Technical Concepts
+## 🔧 Project 13 — Parameter-Efficient Fine-Tuning with QLoRA
+
+### Purpose
+
+A **memory-optimized fine-tuning implementation** using QLoRA (Quantized Low-Rank Adaptation) to fine-tune BERT for sentiment analysis with 4-bit quantization and LoRA adapters, enabling efficient training on consumer GPUs while maintaining competitive performance.
+
+### Technical Approach
+
+**QLoRA Innovation**: Combines 4-bit NF4 quantization with LoRA adapters to reduce memory usage by ~75% while training only 0.16% of the model parameters. This makes large model fine-tuning accessible on 4GB+ GPUs.
+
+**Key Technical Features:**
+- **4-bit Quantization**: Uses NF4 (Normal Float 4-bit) with double quantization
+- **LoRA Adapters**: Low-rank matrices (rank=16) inserted into attention layers
+- **Parameter Efficiency**: Only Query and Value projection layers are adapted
+- **Memory Optimization**: Gradient accumulation and dynamic batch sizing
+- **Experiment Tracking**: Full W&B integration for reproducibility
+
+### Architecture Details
+
+| Component | Configuration |
+|-----------|---------------|
+| Base Model | BERT-base-uncased (110M params) |
+| Quantization | 4-bit NF4 + double quantization |
+| LoRA Rank | 16 (α=32, dropout=0.1) |
+| Target Modules | `["query", "value"]` attention layers |
+| Trainable Params | ~177K (0.16% of total) |
+| Memory Usage | ~4GB VRAM (vs ~16GB full fine-tuning) |
+
+### Training Pipeline
+
+```python
+# 1. Setup quantized model with LoRA
+bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4")
+model = AutoModelForSequenceClassification.from_pretrained(
+    MODEL_NAME, quantization_config=bnb_config
+)
+
+# 2. Apply LoRA configuration
+lora_config = LoraConfig(task_type=TaskType.SEQ_CLS, r=16, lora_alpha=32)
+model = get_peft_model(model, lora_config)
+
+# 3. Train with parameter efficiency
+trainer = Trainer(model=model, args=training_args, train_dataset=train_dataset)
+trainer.train()
+```
+
+### Expected Results
+
+- **Accuracy**: 92-95% on IMDB sentiment classification
+- **F1-Score**: 0.92-0.95 (binary classification)
+- **Training Time**: 10-15 minutes on RTX 3080
+- **Memory Usage**: 4GB+ VRAM (adjustable batch size)
+- **Parameter Efficiency**: 90%+ reduction in trainable parameters
+
+### Quick Start
+
+```powershell
+cd "L4/Finetuning LLMs"
+jupyter notebook qlora_bert_local_gpu.ipynb
+# Follow notebook sections 1-8 sequentially
+# Setup W&B API key when prompted
+```
+
+**Prerequisites**: CUDA-compatible GPU, W&B account, 4GB+ VRAM
+
+---
+
+## 🔤 Project 14 — Building Custom Tokenizers from Scratch
+
+### Purpose
+
+A **foundational tokenization system** that teaches BPE (Byte Pair Encoding) implementation from scratch using the WikiText-2 dataset, providing the essential building blocks for training language models with proper vocabulary construction and text preprocessing.
+
+### Technical Approach
+
+**BPE Algorithm**: Iteratively merges the most frequent character pairs to build optimal subword vocabularies that balance compression efficiency with semantic coherence. This approach handles out-of-vocabulary words naturally and captures morphological patterns.
+
+**Production-Grade Implementation:**
+- **Normalization Pipeline**: NFD → Lowercase → Strip Accents
+- **Pre-tokenization**: Whitespace splitting with configurable patterns
+- **Vocabulary Management**: 30K tokens with frequency-based filtering
+- **Special Token Handling**: `[PAD]`, `[UNK]`, `[CLS]`, `[SEP]`, `[MASK]`
+- **Post-processing**: Template-based special token insertion
+
+### Tokenizer Architecture
+
+```python
+# Complete tokenization pipeline
+tokenizer = Tokenizer(BPE(unk_token="[UNK]"))
+tokenizer.normalizer = Sequence([NFD(), Lowercase(), StripAccents()])
+tokenizer.pre_tokenizer = Whitespace()
+tokenizer.post_processor = TemplateProcessing(
+    single="[CLS] $A [SEP]",
+    special_tokens=[("[CLS]", cls_id), ("[SEP]", sep_id)]
+)
+```
+
+### Dataset Processing
+
+| Stage | Operations |
+|-------|-----------|
+| **Loading** | WikiText-2-v1 via HuggingFace datasets |
+| **Cleaning** | Remove `<unk>`, normalize headers, deduplicate |
+| **Statistics** | ~36K articles, ~11.8M characters, ~145 chars/article avg |
+| **Training** | BPE with min_frequency=2, vocab_size=30K |
+| **Validation** | Coverage analysis, compression ratio measurement |
+
+### Core Learning Objectives
+
+- **Subword Tokenization**: Understand why BPE outperforms word-level approaches
+- **Vocabulary Construction**: Learn optimal vocab sizes and frequency thresholds  
+- **Text Normalization**: Master preprocessing for multilingual robustness
+- **Tokenizer Evaluation**: Measure coverage, compression, and OOV rates
+- **Integration Patterns**: Save/load tokenizers for downstream model training
+
+### Key Metrics
+
+| Metric | Expected Value | Significance |
+|--------|----------------|--------------|
+| **Vocabulary Size** | 30,000 | Standard for most NLP models |
+| **Coverage Rate** | >99.5% | Minimal out-of-vocabulary tokens |
+| **Compression Ratio** | 3.2:1 | Characters to tokens efficiency |
+| **Avg Subword Length** | 3.2-4.1 chars | Optimal granularity |
+
+### Implementation Pipeline
+
+```python
+# 1. Load and explore WikiText-2
+dataset = load_dataset("Salesforce/wikitext", "wikitext-2-v1") 
+
+# 2. Clean and preprocess corpus
+cleaned_data = preprocess_texts(dataset['train']['text'])
+
+# 3. Train BPE tokenizer
+trainer = BpeTrainer(vocab_size=30000, special_tokens=special_tokens)
+tokenizer.train_from_iterator(cleaned_data, trainer=trainer)
+
+# 4. Evaluate and export
+analyze_tokenization_quality(tokenizer)
+tokenizer.save("custom_bpe_tokenizer.json")
+```
+
+### Quick Start
+
+```powershell
+cd "L4/Training LLMs from Scratch" 
+jupyter notebook bpe_tokenizer_wikitext2.ipynb
+# Execute all sections sequentially
+# Examine vocabulary and compression analysis
+# Export tokenizer for use in other projects
+```
+
+**Integration**: The trained tokenizer can be directly used with HuggingFace Transformers via `PreTrainedTokenizerFast(tokenizer_object=tokenizer)`.
+
+---
+
+## 🔗 Shared Technical Concepts
 
 ### Multi-LLM Provider Pattern
 
