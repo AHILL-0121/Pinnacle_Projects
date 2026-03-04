@@ -13,7 +13,7 @@
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Twelve interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent logistics optimization, no-code workflow automation, competitor intelligence, end-to-end machine learning, foundational regression modeling, deep learning neural networks, and comparative NLP architecture benchmarking — each built with enterprise-grade architecture.*
+*Eighteen interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent systems with AutoGen, graph-based workflows with LangGraph, no-code automation, machine learning classification and regression, deep learning, NLP with transformers, LLM fine-tuning, and custom tokenizer development — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -37,6 +37,8 @@
 - [Project 12 — Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp)
 - [Project 13 — Parameter-Efficient Fine-Tuning with QLoRA](#-project-13--parameter-efficient-fine-tuning-with-qlora)
 - [Project 14 — Building Custom Tokenizers from Scratch](#-project-14--building-custom-tokenizers-from-scratch)
+- [Project 15 — Advanced AI Agents with AutoGen](#-project-15--advanced-ai-agents-with-autogen)
+- [Project 16 — LangGraph Multi-Agent Research System](#-project-16--langgraph-multi-agent-research-system)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -47,7 +49,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **fourteen full-stack, independently deployable projects** organized by learning complexity:
+This monorepo contains **eighteen production-grade projects** (including 4 AutoGen sub-projects) organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -65,6 +67,8 @@ This monorepo contains **fourteen full-stack, independently deployable projects*
 | **L4** | [Comparative Sentiment Analysis (NLP)](#-project-12--comparative-sentiment-analysis-nlp) | NLP & Deep Learning | PyTorch, Transformers (BERT), RNN/LSTM/GRU, HuggingFace |
 | **L4** | [Parameter-Efficient Fine-Tuning with QLoRA](#-project-13--parameter-efficient-fine-tuning-with-qlora) | LLM Fine-Tuning | QLoRA, PEFT, BitsAndBytes, Transformers, W&B |
 | **L4** | [Building Custom Tokenizers from Scratch](#-project-14--building-custom-tokenizers-from-scratch) | Tokenization & NLP | BPE, HuggingFace Tokenizers, WikiText-2, Subword Processing |
+| **L4** | [Advanced AI Agents with AutoGen](#-project-15--advanced-ai-agents-with-autogen) | Multi-Agent Systems | AutoGen, Groq, Vision API, FSM, Reflection Pattern |
+| **L4** | [LangGraph Multi-Agent Research System](#-project-16--langgraph-multi-agent-research-system) | Graph-Based Agents | LangGraph, ChromaDB, Tavily, RAG, Intelligent Routing |
 
 ### What Makes These Production-Grade
 
@@ -267,6 +271,57 @@ Pinnacle_Projects/
             ├── Section 5: Analysis         #     Vocabulary coverage, compression ratio
             ├── Section 6: Evaluation       #     Sample tokenization, subword quality
             └── Section 7: Export           #     Save tokenizer for downstream usage
+    │
+    ├── Building Advanced AI Agents with AutoGen/  # PROJECT 15: Multi-agent systems collection
+    │   ├── README.md                       #   Collection overview & patterns guide
+    │   ├── Bill Managing Agent/            #   Group Chat pattern
+    │   │   ├── README.md
+    │   │   └── bill_management_agent_autogen.ipynb
+    │   │       ├── Section 1: Setup        #     autogen, groq, pillow installations
+    │   │       ├── Section 2: LLM Config   #     Groq API (vision + text models)
+    │   │       ├── Section 3: Agents       #     User Proxy, Bill Processor, Summarizer
+    │   │       ├── Section 4: Group Chat   #     GroupChatManager orchestration
+    │   │       └── Section 5: Execution    #     Bill image processing workflow
+    │   │
+    │   ├── Financial Portfolio Manager/    #   Stateful FSM pattern
+    │   │   ├── README.md
+    │   │   └── financial_portfolio_manager.ipynb
+    │   │       ├── Section 1: Setup        #     autogen, groq installation
+    │   │       ├── Section 2: State Machine #    INIT → ANALYSIS → RECOMMEND → REPORT
+    │   │       ├── Section 3: Agents       #     Portfolio Analyst, Advisor, Reporter
+    │   │       ├── Section 4: User Profile #     Risk tolerance, goals, holdings
+    │   │       └── Section 5: Execution    #     State-driven workflow progression
+    │   │
+    │   ├── Smart Content Creation/         #   Reflection pattern
+    │   │   ├── README.md
+    │   │   └── agentic_ai_autogen_reflection.ipynb
+    │   │       ├── Section 1: Setup        #     autogen installation
+    │   │       ├── Section 2: Agents       #     Content Creator, Content Critic
+    │   │       ├── Section 3: Reflection   #     Bidirectional dialogue loop
+    │   │       ├── Section 4: Scoring      #     Quality threshold (8.5/10)
+    │   │       └── Section 5: Execution    #     Iterative content improvement
+    │   │
+    │   └── Smart Health Assistant/         #   Sequential with function calling
+    │       ├── README.md
+    │       └── smart_health_assistant.ipynb
+    │           ├── Section 1: Setup        #     autogen installation
+    │           ├── Section 2: Function Tools #   calculate_bmi() registration
+    │           ├── Section 3: Agents       #     User Proxy, BMI Agent, Meal Planner
+    │           ├── Section 4: Workflow     #     Sequential handoffs
+    │           └── Section 5: Execution    #     Health assessment pipeline
+    │
+    └── Building Advanced AI Agents with LangGraph/ # PROJECT 16: Graph-based coordination
+        ├── README.md
+        └── langgraph_multi_agent_groq.ipynb    #   Router → LLM/RAG/Web → Summarizer
+            ├── Section 1: Dependencies     #     langgraph, langchain, chroma, tavily
+            ├── Section 2: Configuration    #     Groq, HuggingFace embeddings, Tavily
+            ├── Section 3: State Definition #     AgentState schema with typed dict
+            ├── Section 4: LLM & Tools Init #     Groq LLM, Tavily search, embeddings
+            ├── Section 5: RAG Setup        #     ChromaDB knowledge base (AI/ML docs)
+            ├── Section 6: Agent Nodes      #     Router, LLM, RAG, Web Research, Summarizer
+            ├── Section 7: Graph Build      #     Conditional routing, edge definitions
+            ├── Section 8: Execution        #     Query examples (RAG, Web, LLM)
+            └── Section 9: Memory           #     MemorySaver for conversation persistence
 ```
 
 ---
@@ -1678,6 +1733,281 @@ jupyter notebook bpe_tokenizer_wikitext2.ipynb
 ```
 
 **Integration**: The trained tokenizer can be directly used with HuggingFace Transformers via `PreTrainedTokenizerFast(tokenizer_object=tokenizer)`.
+
+---
+
+## 🤖 Project 15 — Advanced AI Agents with AutoGen
+
+### Purpose
+
+A **comprehensive collection of four production-grade multi-agent systems** demonstrating Microsoft AutoGen's enterprise patterns for autonomous agent coordination, including Group Chat, Stateful FSM, Reflection, and Sequential patterns with function calling.
+
+### Technical Architecture
+
+**Multi-Agent Coordination Patterns**:
+- **Group Chat**: Dynamic speaker selection for complex workflows (Bill Management)
+- **Stateful FSM**: Explicit state transitions for deterministic progression (Portfolio Manager)
+- **Reflection Pattern**: Creator-critic loops for iterative improvement (Content Creation)
+- **Sequential with Tools**: Linear workflows with function calling (Health Assistant)
+
+**Technology Stack:**
+- **Framework**: AutoGen 0.11+ (Microsoft's multi-agent framework)
+- **LLM Provider**: Groq (llama-3.1-70b-versatile, llama-3.2-90b-vision-preview)
+- **Vision Processing**: Groq Vision API with base64 encoding
+- **Agent Types**: ConversableAgent, AssistantAgent, UserProxyAgent, GroupChat
+
+### Four Included Projects
+
+#### 1. **Bill Managing Agent** (Group Chat Pattern)
+- **Purpose**: Automated bill processing and expense categorization
+- **Agents**: User Proxy → Group Manager → Bill Processor (Vision) → Summarizer
+- **Key Feature**: Vision API extracts text from receipts, categorizes into 8+ expense types
+- **Output**: Structured expense summaries with category breakdowns
+
+#### 2. **Financial Portfolio Manager** (Stateful FSM Pattern)
+- **Purpose**: Personalized investment advisory for Indian markets
+- **States**: INIT → PORTFOLIO_ANALYSIS → RECOMMENDATION → REPORT → COMPLETE
+- **Agents**: User Proxy → Portfolio Analyst → Financial Advisor → Report Generator
+- **Key Feature**: Risk-based asset allocation across equity, debt, gold, emergency funds
+
+#### 3. **Smart Content Creation** (Reflection Pattern)
+- **Purpose**: Iterative content improvement through creator-critic dialogue
+- **Agents**: Content Creator ⇄ Content Critic (bidirectional)
+- **Key Feature**: Numeric scoring (Language Clarity + Technical Accuracy), threshold-based approval
+- **Termination**: Auto-approval at 8.5/10 score or max 5 iterations
+
+#### 4. **Smart Health Assistant** (Sequential with Function Calling)
+- **Purpose**: Personalized health assessment and meal planning
+- **Agents**: User Proxy → BMI Agent (Tool) → Meal Planner → Summary Agent
+- **Key Feature**: AutoGen function calling with `calculate_bmi()` tool
+- **Output**: BMI classification, health recommendations, customized meal plans
+
+### Agent Pattern Comparison
+
+| Pattern | Best For | Complexity | Termination | Example Use |
+|---------|----------|------------|-------------|-------------|
+| **Group Chat** | Complex, non-linear workflows | High | Group decision | Multi-step document processing |
+| **Stateful FSM** | Sequential stages with validation | Medium | State: COMPLETE | Financial planning, workflows |
+| **Reflection** | Iterative improvement | Low | Quality threshold | Content review, code review |
+| **Sequential + Tools** | Linear with external tools | Medium | Keyword signal | Health assessment, calculations |
+
+### Quick Start
+
+```powershell
+cd "L4/Building Advanced AI Agents with AutoGen"
+pip install autogen groq pillow requests
+
+# Set up API key
+$env:GROQ_API_KEY="your_groq_api_key_here"
+
+# Navigate to any project
+cd "Bill Managing Agent"
+jupyter notebook bill_management_agent_autogen.ipynb
+```
+
+### Learning Outcomes
+
+- **Multi-Agent Design**: Understand when to use different coordination patterns
+- **State Management**: Implement FSMs for deterministic workflows
+- **Function Calling**: Register and use tools with AutoGen agents
+- **Vision APIs**: Process images with vision-enabled LLMs
+- **Quality Control**: Build reflection loops for automated QA
+- **Termination Strategies**: Implement robust exit conditions
+
+### Integration Patterns
+
+**Reusable Components**:
+```python
+# LLM configuration (all projects)
+llm_config = {
+    "model": "llama-3.1-70b-versatile",
+    "api_key": os.environ.get("GROQ_API_KEY"),
+    "temperature": 0.3,
+    "max_tokens": 2000,
+}
+
+# Function registration (Health Assistant)
+@user_proxy.register_for_execution()
+@bmi_agent.register_for_llm(description="Calculate BMI")
+def calculate_bmi(weight: float, height: float) -> dict:
+    # Implementation
+    pass
+
+# Group chat (Bill Management)
+group_chat = autogen.GroupChat(
+    agents=[user_proxy, bill_processor, summarizer],
+    messages=[],
+    max_round=10
+)
+manager = autogen.GroupChatManager(groupchat=group_chat)
+```
+
+**Deployment**: Each project is self-contained and can be deployed as:
+- Jupyter notebooks (development/demos)
+- Python scripts (automation)
+- REST API endpoints (production)
+
+---
+
+## 🔄 Project 16 — LangGraph Multi-Agent Research System
+
+### Purpose
+
+A **production-grade graph-based multi-agent system** demonstrating LangGraph's conditional routing, RAG integration, web search coordination, and intelligent summarization with persistent memory.
+
+### Technical Architecture
+
+**Graph-Based Workflow**:
+```
+__start__ → Router Agent (classify intent)
+              ↓
+    ┌─────────┼─────────┐
+    │         │         │
+   LLM      RAG    Web Research
+    │         │         │
+    └─────────┼─────────┘
+              ↓
+      Summarization Agent
+              ↓
+           __end__
+```
+
+**Technology Stack:**
+- **Orchestration**: LangGraph 0.2+ (graph-based agent coordination)
+- **LLM**: Groq (llama-3.3-70b-versatile) for ultra-fast inference
+- **Embeddings**: HuggingFace (all-MiniLM-L6-v2) - free, local
+- **Vector Store**: ChromaDB (persistent document storage)
+- **Web Search**: Tavily API (advanced search with AI summaries)
+- **Memory**: MemorySaver (conversation persistence)
+
+### Agent Responsibilities
+
+| Agent | Trigger Condition | Data Sources | Output |
+|-------|-------------------|--------------|--------|
+| **Router** | Always (entry point) | Query analysis | Route: 'llm' \| 'rag' \| 'web_research' |
+| **Direct LLM** | General knowledge questions | Model parameters | Direct answer from LLM |
+| **RAG Agent** | Domain-specific queries | ChromaDB (AI/ML corpus) | Context + LLM-generated answer |
+| **Web Research** | Current events, recent data | Tavily search results | Real-time web information |
+| **Summarization** | Always (exit point) | All previous sources | Consolidated final answer |
+
+### Intelligent Routing Logic
+
+**Router Classification**:
+- **'llm'**: Definitions, explanations, general knowledge (e.g., "Explain quantum computing")
+- **'rag'**: Questions about stored documents (e.g., "What are components of Agentic AI?")
+- **'web_research'**: Current events, breaking news (e.g., "Latest GPT-5 developments in 2026")
+
+**Implementation**:
+```python
+def router_node(state: AgentState) -> AgentState:
+    system_prompt = """Analyze query and route to:
+    - 'llm': General knowledge
+    - 'rag': AI/ML from knowledge base
+    - 'web_research': Current events
+    
+    Respond with ONE word only.
+    """
+    route = llm.invoke([SystemMessage(system_prompt), 
+                       HumanMessage(state['query'])])
+    return {"route": route.content.strip().lower()}
+```
+
+### State Management
+
+**AgentState Schema**:
+```python
+class AgentState(TypedDict):
+    query:             str              # User question
+    route:             str              # Selected agent path
+    retrieved_context: str              # RAG/Web results
+    llm_response:      str              # Direct LLM answer
+    final_summary:     str              # Consolidated output
+    messages:          List[BaseMessage] # Conversation history
+    metadata:          dict             # Timestamps, sources
+```
+
+### RAG Configuration
+
+**Vector Store Setup**:
+- **Collection**: "ai_ml_knowledge" (sample AI/ML documents included)
+- **Retrieval**: Top-K similarity search (k=5)
+- **Persistence**: `./chroma_db` directory
+- **Embeddings**: 384-dimensional vectors (MiniLM-L6-v2)
+
+**Web Search Setup**:
+- **Provider**: Tavily (advanced search depth)
+- **Results**: Top 5 with AI-generated summaries
+- **Content**: Excludes raw HTML for efficiency
+
+### Performance Characteristics
+
+| Operation | Time | Notes |
+|-----------|------|-------|
+| **Router Classification** | 0.5-1s | Single LLM call |
+| **RAG Retrieval** | 0.2-0.5s | ChromaDB similarity search |
+| **Web Search** | 1-2s | Tavily API latency |
+| **LLM Generation** | 1-3s | Groq (fastest available) |
+| **Total (RAG path)** | 2-5s | End-to-end |
+| **Total (Web path)** | 3-6s | End-to-end |
+
+### Quick Start
+
+```powershell
+cd "L4/Building Advanced AI Agents with LangGraph"
+pip install langgraph langchain langchain-groq langchain-community \
+    langchain-chroma chromadb sentence-transformers tavily-python
+
+# Set up API keys
+$env:GROQ_API_KEY="your_groq_api_key"
+$env:TAVILY_API_KEY="your_tavily_api_key"
+
+# Run notebook
+jupyter notebook langgraph_multi_agent_groq.ipynb
+```
+
+### Example Queries
+
+**RAG Query**:
+```python
+result = graph.invoke({"query": "What are key components of Agentic AI?"})
+# Routes to: RAG → retrieves from ChromaDB → summarizes
+```
+
+**Web Research Query**:
+```python
+result = graph.invoke({"query": "Latest OpenAI GPT developments in 2026"})
+# Routes to: Web Research → Tavily search → summarizes with sources
+```
+
+**Direct LLM Query**:
+```python
+result = graph.invoke({"query": "Explain gradient descent vs SGD"})
+# Routes to: LLM → direct answer from model
+```
+
+### Learning Outcomes
+
+- **Graph-Based Orchestration**: Build complex agent workflows with LangGraph
+- **Conditional Routing**: Implement dynamic agent selection based on query intent
+- **RAG Implementation**: Set up vector stores, embeddings, and retrieval
+- **Multi-Source Synthesis**: Combine local knowledge + web search
+- **State Management**: Pass context through graph nodes
+- **Memory Persistence**: ChromaDB for vectors, MemorySaver for conversations
+- **API Integration**: Coordinate multiple services (Groq, Tavily, HuggingFace)
+
+### Extension Ideas
+
+- **Multi-Turn Conversations**: Add conversation history to state
+- **Advanced RAG**: Hybrid search (dense + sparse), re-ranking
+- **Tool Integration**: Calculator, code execution, SQL queries
+- **Streaming Output**: Real-time token streaming
+- **Human-in-the-Loop**: Add approval nodes for critical decisions
+- **Evaluation**: Track routing accuracy, retrieval quality (RAGAS framework)
+
+**Deployment**: Package as:
+- Streamlit UI for interactive demos
+- FastAPI REST endpoint for production
+- Docker container with all dependencies
 
 ---
 
