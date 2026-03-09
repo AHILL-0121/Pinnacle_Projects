@@ -13,7 +13,7 @@
 [![LLM](https://img.shields.io/badge/LLM-Multi--Provider-purple?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-*Nineteen interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent systems with AutoGen and CrewAI, graph-based workflows with LangGraph, no-code automation, machine learning classification and regression, deep learning, NLP with transformers, LLM fine-tuning, and custom tokenizer development — each built with enterprise-grade architecture.*
+*Twenty-one interconnected projects spanning REST API design, OCR-powered document intelligence, retrieval-augmented generation, autonomous AI agents, multi-agent systems with AutoGen and CrewAI, graph-based workflows with LangGraph, no-code automation, machine learning classification and regression, deep learning, NLP with transformers, LLM fine-tuning, custom tokenizer development, and AI-powered mock interviewing — each built with enterprise-grade architecture.*
 
 </div>
 
@@ -40,6 +40,7 @@
 - [Project 15 — Advanced AI Agents with AutoGen](#-project-15--advanced-ai-agents-with-autogen)
 - [Project 16 — LangGraph Multi-Agent Research System](#-project-16--langgraph-multi-agent-research-system)
 - [Project 17 — CrewAI Code Analyzer with Groq](#-project-17--crewai-code-analyzer-with-groq)
+- [Project 18 — AI Mock Interviewer with CrewAI](#-project-18--ai-mock-interviewer-with-crewai)
 - [Shared Technical Concepts](#-shared-technical-concepts)
 - [Global Prerequisites](#-global-prerequisites)
 - [Environment Variables Reference](#-environment-variables-reference)
@@ -50,7 +51,7 @@
 
 ## 🎯 Repository Overview
 
-This monorepo contains **nineteen production-grade projects** (including 4 AutoGen sub-projects) organized by learning complexity:
+This monorepo contains **twenty-one production-grade projects** (including 4 AutoGen sub-projects) organized by learning complexity:
 
 | Level | Project | Domain | Core Technologies |
 |:-----:|---------|--------|-------------------|
@@ -71,6 +72,7 @@ This monorepo contains **nineteen production-grade projects** (including 4 AutoG
 | **L4** | [Advanced AI Agents with AutoGen](#-project-15--advanced-ai-agents-with-autogen) | Multi-Agent Systems | AutoGen, Groq, Vision API, FSM, Reflection Pattern |
 | **L4** | [LangGraph Multi-Agent Research System](#-project-16--langgraph-multi-agent-research-system) | Graph-Based Agents | LangGraph, ChromaDB, Tavily, RAG, Intelligent Routing |
 | **L4** | [CrewAI Code Analyzer with Groq](#-project-17--crewai-code-analyzer-with-groq) | Code Analysis & Correction | CrewAI, Groq, CodeInterpreterTool, Hierarchical Agents |
+| **L4** | [AI Mock Interviewer with CrewAI](#-project-18--ai-mock-interviewer-with-crewai) | Interview Simulation | Streamlit, Multi-Agent Evaluation, Ollama/Groq, Direct LLM Calls |
 
 ### What Makes These Production-Grade
 
@@ -2169,6 +2171,236 @@ This allows CrewAI's LLM abstraction to work seamlessly with Groq.
 - **[Project 7](../L3/Building%20your%20First%20AI%20Agent%20with%20LangGraph/)** — LangGraph state machines
 - **[Project 8](../L3/Building%20your%20First%20AI%20Agent%20with%20CrewAI/)** — CrewAI for logistics optimization
 - **[Project 15](#-project-15--advanced-ai-agents-with-autogen)** — AutoGen multi-agent patterns
+
+---
+
+## 🎤 Project 18 — AI Mock Interviewer with CrewAI
+
+### Purpose
+
+A **role-specific AI mock interview platform** with a multi-agent evaluation architecture and Streamlit chat interface. Conducts sequential interviews, provides instant per-answer feedback, and generates comprehensive final reports with performance breakdown.
+
+### Technical Specifications
+
+| Aspect | Detail |
+|--------|--------|
+| **Frontend** | Streamlit (chat-style UI, port 8501) |
+| **Agent Framework** | Direct LLM calls (no CrewAI/LangChain overhead) |
+| **LLM Providers** | Ollama (llama3.1, local) + Groq (llama3-8b-8192, cloud) |
+| **Architecture** | Sequential agent pipeline with controller orchestration |
+| **Question Bank** | Role-specific questions (Data Scientist, Web Developer, Product Manager) |
+| **Evaluation Dimensions** | Correctness, Depth, Example Quality, Clarity (4 criteria) |
+| **Hot-Swappable LLMs** | Switch Ollama ↔ Groq mid-session via sidebar toggle |
+
+### Architecture
+
+```
+Streamlit UI (frontend/app.py)
+      │
+      ▼
+InterviewController  (backend/interview/controller.py)
+      │
+      ├──► EvaluationAgent ───► call_llm() ───► Ollama HTTP  /  Groq SDK
+      │    (scores answer: 1-10, 4 criteria)
+      │
+      └──► FeedbackAgent   ───► call_llm() ───► Ollama HTTP  /  Groq SDK
+           (coaching feedback + final summary)
+```
+
+**Agent Responsibilities**:
+
+| Agent | Responsibility | Input | Output |
+|-------|---------------|-------|--------|
+| **EvaluationAgent** | Score each answer across 4 dimensions | Question + Answer | Score (1-10), Correctness, Depth, Example, Clarity |
+| **FeedbackAgent** | Convert evaluation into coaching feedback | Evaluation JSON | 2-4 sentence coaching feedback |
+| **QuestionAgent** | Rephrase questions / generate follow-ups (optional) | Original question | Variant phrasing |
+
+### Key Features
+
+**Interview Flow**:
+1. User selects role (Data Scientist / Web Developer / Product Manager)
+2. System asks questions sequentially (one at a time)
+3. After each answer:
+   - EvaluationAgent scores answer (1-10 + 4 criteria)
+   - FeedbackAgent generates coaching feedback
+   - Instant feedback displayed in chat
+4. Final report with grade (Excellent / Good / Average / Needs Improvement / Poor)
+
+**Hot-Swappable LLM**:
+- Sidebar toggle: Ollama ↔ Groq
+- Live availability status indicators
+- Switch mid-session without restart
+- Choice persists across questions
+
+**Evaluation Criteria**:
+
+| Criterion | What It Checks |
+|-----------|----------------|
+| **Correctness** | Concept accuracy |
+| **Depth** | Thoroughness of explanation |
+| **Example** | Real-world illustration quality |
+| **Clarity** | Logical structure and coherence |
+
+**Grading Scale**:
+- **Excellent** (9-10): Deep understanding, clear examples, well-structured
+- **Good** (7-8): Solid grasp, minor gaps, mostly clear
+- **Average** (5-6): Basic understanding, limited depth
+- **Needs Improvement** (3-4): Significant gaps, unclear reasoning
+- **Poor** (1-2): Fundamental misunderstandings
+
+### Technical Highlights
+
+**No Framework Overhead**:
+- Direct HTTP POST to Ollama (`/api/chat` endpoint)
+- Direct Groq SDK calls (`groq.chat.completions.create()`)
+- No CrewAI/LangChain abstractions → faster, simpler
+
+**Session Management**:
+- `InterviewSession` dataclass tracks:
+  - Current question index
+  - Answer records (question + answer + evaluation + feedback)
+  - Completion status
+  - Final report and summary
+- Controller manages state transitions
+
+**Question Bank**:
+- Role-specific question pools
+- Structured format: `{id, question, topic, keywords}`
+- Easily extensible (add new roles by editing `question_bank.py`)
+
+### Project Structure
+
+```
+L4/Project Building a Multi-Agent AI-Powered Mock Interviewer using CrewAI/
+├── frontend/
+│   └── app.py                    # Streamlit UI (sidebar, chat, progress bar)
+├── backend/
+│   ├── agents/
+│   │   ├── evaluation_agent.py   # Scores answers (direct LLM call)
+│   │   ├── feedback_agent.py     # Coaching feedback + final summary
+│   │   └── question_agent.py     # Question rephrasing (optional)
+│   ├── interview/
+│   │   ├── controller.py         # Session orchestrator
+│   │   └── question_bank.py      # Role-specific questions
+│   └── utils/
+│       ├── llm_config.py         # Ollama (HTTP) + Groq (SDK) providers
+│       └── scoring.py            # Structured output parser + report builder
+├── requirements.txt              # streamlit, groq, python-dotenv, requests
+├── .env.example
+└── README.md
+```
+
+### Quick Start
+
+```powershell
+# 1. Navigate to project
+cd "L4/Project Building a Multi-Agent AI-Powered Mock Interviewer using CrewAI"
+
+# 2. Create virtual environment
+python -m venv venv
+.\venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Configure environment
+Copy-Item .env.example .env
+# Edit .env:
+#   OLLAMA_BASE_URL=http://localhost:11434
+#   OLLAMA_MODEL=llama3.1
+#   GROQ_API_KEY=your_groq_key_here
+#   GROQ_MODEL=llama3-8b-8192
+
+# 5. Run Streamlit app
+streamlit run frontend/app.py
+# Opens at http://localhost:8501
+```
+
+**LLM Setup**:
+
+*Ollama (Primary, Local)*:
+```bash
+# Install: https://ollama.com/download
+ollama pull llama3.1
+ollama serve  # Auto-starts on login
+```
+
+*Groq (Secondary, Cloud)*:
+1. Get free API key: https://console.groq.com/
+2. Add to `.env`: `GROQ_API_KEY=your_key_here`
+
+### Sample Interview Session
+
+```
+[User selects "Data Scientist" role]
+
+🤖 Question 1/5: What is overfitting in machine learning?
+
+👤 User: Overfitting is when a model learns the training data too well,
+    including noise, so it performs poorly on new data.
+
+🎯 Score: 7/10
+📝 Feedback: Good basic understanding! You correctly identified that
+    overfitting occurs when a model memorizes training data. To strengthen
+    your answer, consider adding a real-world example (e.g., decision tree
+    with too many branches) and mentioning prevention techniques like
+    regularization or cross-validation.
+
+[...continues for 4 more questions...]
+
+📊 Final Report:
+    Overall Grade: Good (7.2/10)
+    Correctness: Strong ✓
+    Depth: Moderate (add more details)
+    Examples: Limited (include real-world cases)
+    Clarity: Excellent ✓
+```
+
+### Adding New Roles
+
+1. Edit `backend/interview/question_bank.py`:
+
+```python
+QUESTION_BANK = {
+    "DevOps Engineer": [
+        {
+            "id": 1,
+            "question": "Explain the concept of Infrastructure as Code (IaC).",
+            "topic": "DevOps Fundamentals",
+            "keywords": ["IaC", "Terraform", "automation"],
+        },
+        # Add 4-5 more questions...
+    ]
+}
+```
+
+2. Role appears automatically in Streamlit sidebar — no code changes needed!
+
+### Learning Outcomes
+
+- **Direct LLM Integration** — HTTP/SDK calls without middleware overhead
+- **Multi-Agent Orchestration** — Sequential pipeline with state management
+- **Streamlit Chat Patterns** — Session state, progress tracking, dynamic UI
+- **Hot-Swappable Providers** — Runtime LLM switching architecture
+- **Structured Evaluation** — Multi-dimensional scoring systems
+- **Provider Abstraction** — Unified interface for Ollama + Groq
+
+### Extension Ideas
+
+- **Resume-Based Questions** — Upload PDF, generate targeted questions
+- **Voice Input/Output** — TTS/STT integration
+- **Difficulty Levels** — Junior / Mid / Senior question variants
+- **Company-Specific Packs** — Google, Meta, Amazon question banks
+- **Analytics Dashboard** — Historical performance tracking
+- **PDF Report Export** — Professional summary generation
+- **Multi-Language Support** — i18n for global users
+
+### Related Projects
+
+- **[Project 8](#-project-8--logistics-optimization-system-crewai)** — CrewAI sequential agents
+- **[Project 15](#-project-15--advanced-ai-agents-with-autogen)** — AutoGen multi-agent patterns
+- **[Project 17](#-project-17--crewai-code-analyzer-with-groq)** — Groq high-speed inference
+- **[Project 2](#-project-2--financial-document-analyzer)** — Streamlit + FastAPI architecture
 
 ---
 
